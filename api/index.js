@@ -5,13 +5,14 @@ const cors = require('cors');
 const fs = require('fs');
 const jsonFile = require('../data/questions.json');
 const scoresFile = require('../data/scores.json');
-
+const path = require('path');
 // Middleware Setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '../views'));
+app.set('views', path.join(__dirname, '../views'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // CORS Configuration
 app.use((req, res, next) => {
