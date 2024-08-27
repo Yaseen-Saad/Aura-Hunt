@@ -115,6 +115,10 @@ app.get('/game/:id', (req, res) => {
     res.status(404).send('Not found');
   }
 });
+app.get('/scoreboard', (req, res) => {
+  const scores = scoresFile.map(team => { return { id: team.id, score: team.score } });  
+  res.render('scoreboard', {scores:scores});
+})
 
 // Catch-all route for undefined paths
 app.get('*', (req, res) => {

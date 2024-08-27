@@ -1,10 +1,10 @@
 {
   "name": "supersecretproject",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "devStart": "nodemon index.js",
-    "start": "node index.js"
+    "devStart": "nodemon ./api/index.js",
+    "start": "node ./api/index.js"
   },
   "keywords": [],
   "author": "",
