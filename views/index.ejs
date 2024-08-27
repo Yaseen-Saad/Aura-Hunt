@@ -13,7 +13,7 @@
     <div>
       <a href="../" class="button-77" id="instructions">Instructions</a>
       <a href="../scoreboard" class="button-77" id="scoreboard">Scoreboard</a>
-      </div>
+    </div>
   </nav>
   <div class="overlayer"></div>
   <main>
@@ -42,7 +42,6 @@
         </div>
         <button class="button-77" id="submit">Check</button>
       </div>
-      <!-- <button id="auramaster">Reach Aura Master</button> -->
     </div>
   </main>
   <footer>
@@ -50,30 +49,8 @@
       <p>STEM High School for Boys - 6th of October</p>
     </div>
   </footer>
+  <script src="/assets/js/main.js"></script>
   <script>
-    const hide = document.getElementById('hide');
-    const txt2 = document.getElementById('txt2');
-    const txt = document.getElementById('txt');
-    resize();
-    txt.addEventListener("input", resize);
-    txt.addEventListener("blur", () => {
-      if (!txt.value) txt.value = "Answer Here...";
-      resize()
-    });
-    setInterval(() => {
-      document.querySelector(".glitch").classList.toggle("active");
-      setTimeout(() => {
-        document.querySelector(".glitch").classList.toggle("active");
-
-      }, 1000);
-    }, 10000);
-    function resize() {
-      hide.textContent = txt.value;
-      txt2.style.width = hide.getBoundingClientRect().width + 'px';
-      txt.style.width = hide.getBoundingClientRect().width + 'px';
-      console.log(txt.getBoundingClientRect().width, hide.getBoundingClientRect().width, txt.getBoundingClientRect().width === hide.getBoundingClientRect().width)
-    }
-
     fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },

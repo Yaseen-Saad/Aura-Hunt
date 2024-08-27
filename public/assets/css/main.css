@@ -9,6 +9,12 @@
   font-weight: normal;
   src: local("Bates Shower"), url("../fonts/Bates Shower.woff") format("woff");
 }
+@media screen and (max-width: 768px) {
+  :root {
+    font-size: 12px;
+  }
+}
+
 body {
   font-family: "Oswald", sans-serif;
   font-weight: 400;
@@ -109,10 +115,9 @@ body main .game > div .input:after {
   background-size: 500% auto;
   animation: gradient 3s linear infinite;
 }
-body main .game > div .input #hide {
+body main .game > div .input .hide {
   position: absolute;
   height: 0;
-  bottom: -60px;
   font-size: 1.5rem;
   overflow: hidden;
   white-space: pre;
@@ -122,6 +127,10 @@ body main .game > div .input input {
   font-family: "Oswald", sans-serif;
   border-style: none;
   background: transparent;
+  text-align: center;
+  width: -moz-max-content;
+  width: max-content;
+  min-width: 70vw;
   outline: none;
   color: #000;
   padding: 0;
@@ -155,20 +164,20 @@ body footer p {
   background-clip: padding-box;
   background-color: initial;
   background-image: none;
+  display: inline-flex;
   border-style: none;
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
-  display: inline-block;
   flex-direction: row;
   flex-shrink: 0;
   font-family: Eina01, sans-serif;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 800;
   justify-content: center;
-  line-height: 24px;
+  align-items: center;
   margin: 0;
-  min-height: 64px;
+  min-height: 50px;
   outline: none;
   overflow: visible;
   padding: 19px 26px;
@@ -187,6 +196,18 @@ body footer p {
   z-index: 0;
   margin-top: 10px;
   opacity: 0.84;
+}
+@media screen and (max-width: 768px) {
+  .button-77 {
+    padding: 10px 20px;
+  }
+}
+@media screen and (max-width: 512px) {
+  .button-77 {
+    font-size: 0.8rem;
+    padding-inline: 15px;
+    margin-inline: 0;
+  }
 }
 
 @media (min-width: 768px) {
@@ -265,7 +286,7 @@ body footer p {
   left: 0;
 }
 .glitch.active .line:nth-child(1) {
-  animation: clip 3000ms -500ms linear infinite, glitch1 500ms -3319ms linear infinite;
+  animation: clip 3000ms -500ms linear infinite, glitch1 500ms -2480ms linear infinite;
 }
 @keyframes glitch1 {
   0% {
@@ -280,7 +301,7 @@ body footer p {
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-3px);
+    transform: translateX(1px);
     color: #AC1212;
   }
   95% {
@@ -292,7 +313,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(2) {
-  animation: clip 3000ms -1000ms linear infinite, glitch2 500ms -2350ms linear infinite;
+  animation: clip 3000ms -1000ms linear infinite, glitch2 500ms -1922ms linear infinite;
 }
 @keyframes glitch2 {
   0% {
@@ -303,15 +324,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(4px);
+    transform: translateX(2px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-3px);
+    transform: translateX(4px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(-4px);
+    transform: translateX(-1px);
     color: #fff;
   }
   100% {
@@ -319,7 +340,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(3) {
-  animation: clip 3000ms -1500ms linear infinite, glitch3 500ms -1079ms linear infinite;
+  animation: clip 3000ms -1500ms linear infinite, glitch3 500ms -1064ms linear infinite;
 }
 @keyframes glitch3 {
   0% {
@@ -330,15 +351,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(2px);
+    transform: translateX(4px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(5px);
+    transform: translateX(2px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(2px);
+    transform: translateX(1px);
     color: #fff;
   }
   100% {
@@ -346,7 +367,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(4) {
-  animation: clip 3000ms -2000ms linear infinite, glitch4 500ms -2389ms linear infinite;
+  animation: clip 3000ms -2000ms linear infinite, glitch4 500ms -290ms linear infinite;
 }
 @keyframes glitch4 {
   0% {
@@ -357,15 +378,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(1px);
+    transform: translateX(-1px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-2px);
+    transform: translateX(2px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(5px);
+    transform: translateX(1px);
     color: #fff;
   }
   100% {
@@ -373,7 +394,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(5) {
-  animation: clip 3000ms -2500ms linear infinite, glitch5 500ms -761ms linear infinite;
+  animation: clip 3000ms -2500ms linear infinite, glitch5 500ms -784ms linear infinite;
 }
 @keyframes glitch5 {
   0% {
@@ -384,15 +405,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(-1px);
+    transform: translateX(4px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-3px);
+    transform: translateX(-2px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(0px);
+    transform: translateX(2px);
     color: #fff;
   }
   100% {
@@ -400,7 +421,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(6) {
-  animation: clip 3000ms -3000ms linear infinite, glitch6 500ms -1741ms linear infinite;
+  animation: clip 3000ms -3000ms linear infinite, glitch6 500ms -2758ms linear infinite;
 }
 @keyframes glitch6 {
   0% {
@@ -411,15 +432,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(4px);
+    transform: translateX(0px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-2px);
+    transform: translateX(0px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(-3px);
+    transform: translateX(1px);
     color: #fff;
   }
   100% {
@@ -427,7 +448,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(7) {
-  animation: clip 3000ms -3500ms linear infinite, glitch7 500ms -3138ms linear infinite;
+  animation: clip 3000ms -3500ms linear infinite, glitch7 500ms -2039ms linear infinite;
 }
 @keyframes glitch7 {
   0% {
@@ -438,15 +459,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(2px);
+    transform: translateX(3px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-2px);
+    transform: translateX(5px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(-4px);
+    transform: translateX(1px);
     color: #fff;
   }
   100% {
@@ -454,7 +475,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(8) {
-  animation: clip 3000ms -4000ms linear infinite, glitch8 500ms -2815ms linear infinite;
+  animation: clip 3000ms -4000ms linear infinite, glitch8 500ms -1424ms linear infinite;
 }
 @keyframes glitch8 {
   0% {
@@ -465,15 +486,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(-2px);
+    transform: translateX(3px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-1px);
+    transform: translateX(-4px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(2px);
+    transform: translateX(-4px);
     color: #fff;
   }
   100% {
@@ -481,7 +502,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(9) {
-  animation: clip 3000ms -4500ms linear infinite, glitch9 500ms -3144ms linear infinite;
+  animation: clip 3000ms -4500ms linear infinite, glitch9 500ms -3458ms linear infinite;
 }
 @keyframes glitch9 {
   0% {
@@ -492,15 +513,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(5px);
+    transform: translateX(-4px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(4px);
+    transform: translateX(-2px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(2px);
+    transform: translateX(4px);
     color: #fff;
   }
   100% {
@@ -508,7 +529,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(10) {
-  animation: clip 3000ms -5000ms linear infinite, glitch10 500ms -3162ms linear infinite;
+  animation: clip 3000ms -5000ms linear infinite, glitch10 500ms -70ms linear infinite;
 }
 @keyframes glitch10 {
   0% {
@@ -519,15 +540,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(-2px);
+    transform: translateX(-3px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(1px);
+    transform: translateX(4px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(1px);
+    transform: translateX(0px);
     color: #fff;
   }
   100% {

@@ -34,6 +34,9 @@ body {
         &:nth-of-type(odd) {
             background: #fff;
         }
+        &.team{
+            background-color: #00ae6b;
+        }
     }
 
     td,

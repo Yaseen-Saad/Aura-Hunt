@@ -25,6 +25,9 @@ body tr {
 body tr:nth-of-type(odd) {
   background: #fff;
 }
+body tr.team {
+  background-color: #00ae6b;
+}
 body td,
 body th {
   flex: 1 1 20%;

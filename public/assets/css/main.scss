@@ -11,6 +11,12 @@
     src: local('Bates Shower'), url('../fonts/Bates\ Shower.woff') format('woff');
 }
 
+:root {
+    @media screen and (max-width: 768px) {
+        font-size: 12px;
+    }
+}
+
 body {
     font-family: "Oswald", sans-serif;
     font-weight: 400;
@@ -33,6 +39,7 @@ body {
         justify-content: space-between;
         padding: 20px min(20px, 5%);
         align-items: center;
+
 
         img {
             width: 80px;
@@ -120,10 +127,9 @@ body {
                         animation: gradient 3s linear infinite;
                     }
 
-                    #hide {
+                    .hide {
                         position: absolute;
                         height: 0;
-                        bottom: -60px;
                         font-size: 1.5rem;
                         overflow: hidden;
                         white-space: pre;
@@ -131,12 +137,13 @@ body {
 
                     }
 
-
-
                     input {
                         font-family: "Oswald", sans-serif;
                         border-style: none;
                         background: transparent;
+                        text-align: center;
+                        width: max-content;
+                        min-width: 70vw;
                         outline: none;
                         color: #000;
                         padding: 0;
@@ -164,7 +171,6 @@ body {
     }
 }
 
-
 @keyframes gradient {
     0% {
         background-position: 0 0
@@ -182,23 +188,29 @@ body {
     background-clip: padding-box;
     background-color: initial;
     background-image: none;
+    display: inline-flex;
     border-style: none;
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
-    display: inline-block;
     flex-direction: row;
     flex-shrink: 0;
     font-family: Eina01, sans-serif;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 800;
     justify-content: center;
-    line-height: 24px;
+    align-items: center;
     margin: 0;
-    min-height: 64px;
+    min-height: 50px;
     outline: none;
     overflow: visible;
     padding: 19px 26px;
+
+    @media screen and (max-width: 768px) {
+        padding: 10px 20px;
+    }
+
+
     pointer-events: auto;
     position: relative;
     text-align: center;
@@ -214,7 +226,11 @@ body {
     margin-top: 10px;
     opacity: .84;
 
-
+    @media screen and (max-width: 512px) {
+        font-size: 0.8rem;
+        padding-inline: 15px;
+        margin-inline: 0;
+    }
 }
 
 @media (min-width: 768px) {

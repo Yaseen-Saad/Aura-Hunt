@@ -40,12 +40,12 @@
                     <th>Aura</th>
                 </tr>
                 <% locals.scores.sort((a, b)=> b.score - a.score).forEach((score,i) => { %>
-                    <tr>
+
+                    <tr id="<%=  score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id %>">
                         <td>
                             <%= i+1 %>
                         </td>
-                        <td>
-                            <%= score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id %>
+                        <td><%= score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id %>
                         </td>
                         <td>
                             <%= score.score %>
@@ -61,6 +61,8 @@
         </div>
     </footer>
     <script>
+        const teamId = localStorage.getItem('teamId');
+        document.getElementById(teamId).classList.add('team');
         const hide = document.getElementById('hide');
         const txt2 = document.getElementById('txt2');
         const txt = document.getElementById('txt');
@@ -83,7 +85,6 @@
             txt.style.width = hide.getBoundingClientRect().width + 'px';
             console.log(txt.getBoundingClientRect().width, hide.getBoundingClientRect().width, txt.getBoundingClientRect().width === hide.getBoundingClientRect().width)
         }
-
         fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
