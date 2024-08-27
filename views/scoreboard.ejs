@@ -35,13 +35,17 @@
             <h2>Score Board</h2>
             <table>
                 <tr>
+                    <th>Rank</th>
                     <th>Team</th>
                     <th>Aura</th>
                 </tr>
-                <% locals.scores.sort((a, b)=> b.score - a.score).forEach((score) => { %>
+                <% locals.scores.sort((a, b)=> b.score - a.score).forEach((score,i) => { %>
                     <tr>
                         <td>
-                            <%= score.id %>
+                            <%= i+1 %>
+                        </td>
+                        <td>
+                            <%= score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id %>
                         </td>
                         <td>
                             <%= score.score %>
