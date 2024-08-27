@@ -28,6 +28,15 @@ body tr:nth-of-type(odd) {
 body tr.team {
   background-color: #00ae6b;
 }
+body tr:nth-child(2) {
+  background-color: Gold;
+}
+body tr:nth-child(3) {
+  background-color: silver;
+}
+body tr:nth-child(4) {
+  background-color: burlywood;
+}
 body td,
 body th {
   flex: 1 1 20%;

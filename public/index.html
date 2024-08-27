@@ -60,6 +60,26 @@
     </div>
   </footer>
   <script src="./assets/js/main.js"></script>
+  <script>
+    document.getElementById("submit").addEventListener("click", function () {
+      fetch('/teamlogin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team: teamId.value, password: password.value })
+      }).then((response) => response.json())
+        .then(data => {
+          if (data.message === "Team logged in successfully") {
+            localStorage.setItem("teamToken", data.token)
+            localStorage.setItem("teamId", teamId.value)
+          } else if (data.message === "Wrong password") {
+            alert("Wrong password")
+          }else{
+            alert("Wrong credentials")
+          }
+        }
+        ).catch(error => console.log(error))
+    })
+  </script>
 </body>
 
 </html>

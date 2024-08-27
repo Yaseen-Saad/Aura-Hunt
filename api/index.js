@@ -116,8 +116,20 @@ app.get('/game/:id', (req, res) => {
   }
 });
 app.get('/scoreboard', (req, res) => {
-  const scores = scoresFile.map(team => { return { id: team.id, score: team.score } });  
-  res.render('scoreboard', {scores:scores});
+  const scores = scoresFile.map(team => { return { id: team.id, score: team.score } });
+  res.render('scoreboard', { scores: scores });
+})
+app.post('/teamlogin', (req, res) => {
+  const team = scoresFile.find(team => team.id === req.body.team);
+  if (team) {
+    if (team.password === req.body.password) {
+      res.status(200).send({ message: 'Team logged in successfully', token: team.token });
+    } else {
+      res.status(200).send({ message: 'Wrong password' });
+    }
+  } else {
+    res.status(404).send({ message: 'Team not found' });
+  }
 })
 
 // Catch-all route for undefined paths
