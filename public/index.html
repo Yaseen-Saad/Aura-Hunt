@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./assets/css/main.css">
+</head>
+
+<body>
+  <nav><img src="./assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <button class="button-77" id="instructions">Instructions</button>
+      <button class="button-77" id="scoreboard">Scoreboard</button>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+
+    <div class="glitch">
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+    </div>
+    <div class="game">
+      <p>
+        Here you have a great challenge, a great responsibility, the aura master himself is starting to feel tired from
+        all the aura he has gave and is still giving. He needs to have a refill, he prepared himself with his food.
+        Surely
+        his food is not like ours, he eats only golden apples, He has hidden his apple in his honor room, he dropped its
+        keys down the hall you have only 5 mins to find the key, go to the room, grab the golden apple, and hand it to
+        the
+        grand master, falling to do so or ignoring the challenge deduces your aura by <span class="red">400-</span>
+        aura, a bit hard challenge, but gives you a <span class="green">1400+</span> aura if done, so move fast.
+      </p>
+      <div>
+        <div id="txt2" class="input">
+          <span id="hide"></span>
+          <input id="txt" type="text" value="Answer here ...">
+        </div>
+        <button class="button-77" id="submit">Check</button>
+      </div>
+      <!-- <button id="auramaster">Reach Aura Master</button> -->
+    </div>
+  </main>
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October</p>
+    </div>
+  </footer>
+  <script>
+    const hide = document.getElementById('hide');
+    const txt2 = document.getElementById('txt2');
+    const txt = document.getElementById('txt');
+    resize();
+    txt.addEventListener("input", resize);
+    txt.addEventListener("blur", () => {
+      if (!txt.value) txt.value = "Answer Here...";
+      resize()
+    });
+    setInterval(() => {
+      document.querySelector(".glitch").classList.toggle("active");
+      setTimeout(() => {
+        document.querySelector(".glitch").classList.toggle("active");
+
+      }, 1000);
+    }, 10000);
+    function resize() {
+      hide.textContent = txt.value;
+      txt2.style.width = hide.getBoundingClientRect().width + 'px';
+      txt.style.width = hide.getBoundingClientRect().width + 'px';
+      console.log(txt.getBoundingClientRect().width, hide.getBoundingClientRect().width, txt.getBoundingClientRect().width === hide.getBoundingClientRect().width)
+    }
+
+    fetch('http://localhost:3000/question/2', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(response => response.json())
+      .then(data => console.log(data));
+    const button = document.getElementById('make-call');
+    button.addEventListener('click', () => {
+      const data = {
+        teamId: 219, gameId: 1, answer: "Xffsd"
+      }
+      console.log(JSON.stringify(data));
+
+      fetch('http://localhost:3000/answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(res => res.json()).then(data => console.log(data))
+    });
+
+  </script>
+
+</body>
+
+</html>

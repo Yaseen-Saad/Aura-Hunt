@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "name": "Treasure_1",
+    "description": "Find the treasure in the jungle",
+    "answer": "X",
+    "score": 50,
+    "attempts": "Infinity",
+    "deduction": 20
+  },
+  {
+    "id": 2,
+    "name": "Treasure_2",
+    "description": "Find the treasure in the desert",
+    "answer": "STEM High School for Boys - 6th of October",
+    "deduction": 0,
+    "attempts": "3"
+  },
+  {
+    "id": 3,
+    "name": "Treasure 3",
+    "description": "Find the treasure in the city",
+    "answer": "Y",
+    "score": 30,
+    "deduction": 0,
+    "attempts": "Infinity"
+  }
+]
