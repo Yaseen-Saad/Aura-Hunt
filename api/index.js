@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname + '../views'));
 
 // CORS Configuration
 app.use((req, res, next) => {
@@ -108,7 +108,6 @@ const updateScores = (scoresFile, res, message, status = 200, extra = {}) => {
 app.get('/game/:id', (req, res) => {
   const gameName = req.params.id;
   const selectedGame = jsonFile.find(game => game.name === gameName);
-
   if (selectedGame) {
     res.render('index', selectedGame);
   } else {
