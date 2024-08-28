@@ -27,7 +27,15 @@
   </nav>
   <div class="overlayer"></div>
   <main>
-
+    <div class="modal-container">
+      <input id="modal-toggle" type="checkbox">
+      <label class="modal-backdrop" for="modal-toggle"></label>
+      <div class="modal-content">
+        <label class="modal-close" for="modal-toggle">&#x2715;</label>
+        <p>Ready to Hunt Aura ?</p>
+        <label class="button-77" id="alert-button" for="modal-toggle">OK</label>
+      </div>
+    </div>
     <div class="glitch">
       <div class="line">Aura Hunt</div>
       <div class="line">Aura Hunt</div>
@@ -60,26 +68,7 @@
     </div>
   </footer>
   <script src="./assets/js/main.js"></script>
-  <script>
-    document.getElementById("submit").addEventListener("click", function () {
-      fetch('/teamlogin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ team: teamId.value, password: password.value })
-      }).then((response) => response.json())
-        .then(data => {
-          if (data.message === "Team logged in successfully") {
-            localStorage.setItem("teamToken", data.token)
-            localStorage.setItem("teamId", teamId.value)
-          } else if (data.message === "Wrong password") {
-            alert("Wrong password")
-          }else{
-            alert("Wrong credentials")
-          }
-        }
-        ).catch(error => console.log(error))
-    })
-  </script>
+  <script src="./assets/js/login.js"></script>
 </body>
 
 </html>
