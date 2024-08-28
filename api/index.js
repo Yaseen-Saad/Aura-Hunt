@@ -131,6 +131,10 @@ app.post('/teamlogin', (req, res) => {
     res.status(404).send({ message: 'Team not found' });
   }
 })
+app.get('/instructions', (req, res) => {
+  const scores = scoresFile.map(team => { return { id: team.id, score: team.score } });
+  res.render('instructions', { scores: scores });
+})
 
 // Catch-all route for undefined paths
 app.get('*', (req, res) => {
