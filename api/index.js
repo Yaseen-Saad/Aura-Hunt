@@ -26,7 +26,7 @@ app.post(
   "/upload",
   // upload.single("file"),
   (req, res) => {
-    const tempPath = req.file.path;
+    // const tempPath = req.file.path;
     const teamId = req.body.teamid;
     const teamToken = req.body.teamtoken;
     const gameName = req.body.gamename;
