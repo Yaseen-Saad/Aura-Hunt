@@ -24,7 +24,7 @@ const app = express();
 // });
 app.post(
   "/upload",
-  upload.single("file"),
+  // upload.single("file"),
   (req, res) => {
     const tempPath = req.file.path;
     const teamId = req.body.teamid;
