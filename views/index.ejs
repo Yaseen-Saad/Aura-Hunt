@@ -6,6 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    .game {
+      display: flex !important;
+      flex-direction: column;
+    }
+
+    h2 {
+      margin: 5px;
+    }
+  </style>
 </head>
 
 <body>
@@ -17,8 +27,9 @@
   </nav>
   <div class="overlayer"></div>
   <main>
-    <span id="gamedata" style="display: none;">
-      <%= locals.gameName %>
+
+    <span id="gameId" style="display: none;">
+      <%=locals.id%>
     </span>
     <div class="glitch">
       <div class="line">Aura Hunt</div>
@@ -32,44 +43,62 @@
       <div class="line">Aura Hunt</div>
     </div>
     <div class="game">
+      <h2>
+        <%=locals.name%>
+      </h2>
       <p>
-        <%= locals.description%>
+        <%=locals.description%>
       </p>
-      <div>
-        <div id="txt2" class="input">
-          <span id="hide"></span>
-          <input id="txt" type="text" value="Answer here ...">
+      <%if(locals.answer){%>
+        <div>
+          <div id="txt1" class="input">
+            <span id="hide1" class="hide"></span>
+            <input id="teamId" type="text" value="Answer here ...">
+          </div>
+          <button class="button-77" id="submit">Check</button>
         </div>
-        <button class="button-77" id="submit">Check</button>
-      </div>
+        <%} %>
     </div>
+    <form method="post" enctype="multipart/form-data" action="/upload">
+      <input type="file" name="file">
+      <input type="text" id="teamidsubmittion" hidden name="teamid">
+      <input type="text" id="teamTokensubmittion" hidden name="teamtoken">
+      <input type=" text" id="gamenamesubmittion" hidden name="gamename">
+      <input type="submit" value="Submit">
+    </form>
+    <script>
+      document.getElementById("teamidsubmittion").value = localStorage.getItem("teamId")
+      document.getElementById("teamTokensubmittion").value = localStorage.getItem("teamToken")
+      document.getElementById("gamenamesubmittion").value = document.querySelector('.game h2').innerText
+      console.log(localStorage.getItem("teamId")
+      )</script>
   </main>
   <footer>
     <div>
       <p>STEM High School for Boys - 6th of October</p>
     </div>
   </footer>
-  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/game.js"></script>
   <script>
-    fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(response => response.json())
-      .then(data => console.log(data));
-    const button = document.getElementById('make-call');
-    button.addEventListener('click', () => {
-      const data = {
-        teamId: 219, gameId: 1, answer: "Xffsd"
-      }
-      console.log(JSON.stringify(data));
+    // fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {
+    //   method: 'GET',
+    //   headers: { 'Content-Type': 'application/json' },
+    // })
+    //   .then(response => response.json())
+    //   .then(data => console.log(data));
+    // const button = document.getElementById('make-call');
+    // button.addEventListener('click', () => {
+    //   const data = {
+    //     teamId: 219, gameId: 1, answer: "Xffsd"
+    //   }
+    //   console.log(JSON.stringify(data));
 
-      fetch('http://localhost:3000/answer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      }).then(res => res.json()).then(data => console.log(data))
-    });
+    //   fetch('http://localhost:3000/answer', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(data)
+    //   }).then(res => res.json()).then(data => console.log(data))
+    // });
 
   </script>
 

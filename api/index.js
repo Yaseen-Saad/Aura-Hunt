@@ -1,11 +1,58 @@
+// Libraries
 const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
+const multer = require("multer");
+
+// JSON Data
 const jsonFile = require('../data/questions.json');
 const scoresFile = require('../data/scores.json');
-const path = require('path');
+// Initializations
+const app = express();
+
+const handleError = (err, res) => {
+  res
+    .status(500)
+    .contentType("text/plain")
+    .end("Oops! Something went wrong!");
+};
+
+const upload = multer({
+  dest: "/path/to/temporary/directory/to/store/uploaded/files"
+});
+app.post(
+  "/upload",
+  upload.single("file"),
+  (req, res) => {
+    const tempPath = req.file.path;
+    const teamId = req.body.teamid;
+    const teamToken = req.body.teamtoken;
+    const gameName = req.body.gamename;
+    const team = scoresFile.find(team => team.id === teamId);
+    if (team.token === teamToken) {
+      console.log(gameName);
+      const imagePath = path.join(__dirname, "../uploads/", teamId + "_" + gameName + "_" + Date.now() + ".png");
+      console.log(imagePath);
+      
+      //   const targetPath = path.join(__dirname, "../uploads/", teamId + "_" + req.body.name + "_" + req.body.attempt + ".png");
+      //   fs.rename(tempPath, targetPath, err => {
+      //     if (err) return handleError(err, res);
+      //     res
+      //       .status(200)
+      //       .contentType("text/plain")
+      //       .end("File uploaded!");
+      //   });
+    } else {
+      res.status(200).send({ message: "Please Login Again!" })
+    }
+  }
+);
+
+
+
+
 // Middleware Setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -110,6 +157,7 @@ app.get('/game/:id', (req, res) => {
   const gameName = req.params.id;
   const selectedGame = jsonFile.find(game => game.name === gameName);
   if (selectedGame) {
+    console.log(selectedGame);
     res.render('index', selectedGame);
   } else {
     res.status(404).send('Not found');
