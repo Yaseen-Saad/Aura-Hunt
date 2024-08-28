@@ -23,8 +23,8 @@ app.use((req, res, next) => {
 
 // Route to List All Games
 app.get('/games', (req, res) => {
-  const games = jsonFile.map(game => `<a href="/game/${game.id}">${game.name}</a>`);
-  res.send(`<!DOCTYPE html><html><body><h1>Game List</h1><ul>${games.join('')}</ul><p>FD</p></body></html>`);
+  const games = jsonFile.map(game => `<li><a href="/game/${game.id}">${game.name}</a></li>`);
+  res.send(`<!DOCTYPE html><html><body><h1>Game List</h1><ul>${games.join('')}</ul></body></html>`);
 });
 
 // Start the Server
