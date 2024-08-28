@@ -12,43 +12,42 @@ const scoresFile = require('../data/scores.json');
 // Initializations
 const app = express();
 
-const handleError = (err, res) => {
-  res
-    .status(500)
-    .contentType("text/plain")
-    .end("Oops! Something went wrong!");
-};
+// const handleError = (err, res) => {
+//   res
+//     .status(500)
+//     .contentType("text/plain")
+//     .end("Oops! Something went wrong!");
+// };
 
-const upload = multer({
-  dest: "/path/to/temporary/directory/to/store/uploaded/files"
-});
-app.post(
-  "/upload",
-  upload.single("file"),
-  (req, res) => {
-    const tempPath = req.file.path;
-    const teamId = req.body.teamid;
-    const teamToken = req.body.teamtoken;
-    const gameName = req.body.gamename;
-    const team = scoresFile.find(team => team.id === teamId);
-    if (team.token === teamToken) {
-      console.log(gameName);
-      const imagePath = path.join(__dirname, "../uploads/", teamId + "_" + gameName + "_" + Date.now() + ".png");
-      console.log(imagePath);
-      
-      //   const targetPath = path.join(__dirname, "../uploads/", teamId + "_" + req.body.name + "_" + req.body.attempt + ".png");
-      //   fs.rename(tempPath, targetPath, err => {
-      //     if (err) return handleError(err, res);
-      //     res
-      //       .status(200)
-      //       .contentType("text/plain")
-      //       .end("File uploaded!");
-      //   });
-    } else {
-      res.status(200).send({ message: "Please Login Again!" })
-    }
-  }
-);
+// const upload = multer({
+//   dest: "/path/to/temporary/directory/to/store/uploaded/files"
+// });
+// app.post(
+//   "/upload",
+//   upload.single("file"),
+//   (req, res) => {
+//     const tempPath = req.file.path;
+//     const teamId = req.body.teamid;
+//     const teamToken = req.body.teamtoken;
+//     const gameName = req.body.gamename;
+//     const team = scoresFile.find(team => team.id === teamId);
+//     if (team.token === teamToken) {
+//       console.log(gameName);
+//       const imagePath = path.join(__dirname, "../uploads/", teamId + "_" + gameName + "_" + Date.now() + ".png");
+//       console.log(imagePath);
+//       //   const targetPath = path.join(__dirname, "../uploads/", teamId + "_" + req.body.name + "_" + req.body.attempt + ".png");
+//       //   fs.rename(tempPath, targetPath, err => {
+//       //     if (err) return handleError(err, res);
+//       //     res
+//       //       .status(200)
+//       //       .contentType("text/plain")
+//       //       .end("File uploaded!");
+//       //   });
+//     } else {
+//       res.status(200).send({ message: "Please Login Again!" })
+//     }
+//   }
+// );
 
 
 
