@@ -27,7 +27,15 @@
   </nav>
   <div class="overlayer"></div>
   <main>
-
+    <div class="modal-container">
+      <input id="modal-toggle" type="checkbox">
+      <label class="modal-backdrop" for="modal-toggle"></label>
+      <div class="modal-content">
+        <label class="modal-close" for="modal-toggle">&#x2715;</label>
+        <p>Ready to Hunt Aura ?</p>
+        <label class="button-77" id="alert-button" for="modal-toggle">OK</label>
+      </div>
+    </div>
     <span id="gameId" style="display: none;">
       <%=locals.id%>
     </span>
@@ -50,28 +58,75 @@
         <%=locals.description%>
       </p>
       <%if(locals.answer){%>
-        <div>
-          <div id="txt1" class="input">
-            <span id="hide1" class="hide"></span>
-            <input id="teamId" type="text" value="Answer here ...">
-          </div>
-          <button class="button-77" id="submit">Check</button>
+      <div>
+        <div id="txt1" class="input">
+          <span id="hide1" class="hide"></span>
+          <input id="teamId" type="text" value="Answer here ...">
         </div>
-        <%} %>
+        <button class="button-77" id="submit">Check</button>
+      </div>
+      <%} %>
     </div>
-    <form method="post" enctype="multipart/form-data" action="/upload">
-      <input type="file" name="file">
-      <input type="text" id="teamidsubmittion" hidden name="teamid">
-      <input type="text" id="teamTokensubmittion" hidden name="teamtoken">
-      <input type=" text" id="gamenamesubmittion" hidden name="gamename">
-      <input type="submit" value="Submit">
+    <form id="form" method="post" enctype="multipart/form-data" action="/upload">
+      <input type="file" name="file" required>
+      <input type="text" id="teamidsubmittion" name="teamid" required>
+      <input type="text" id="teamTokensubmittion" name="teamtoken" required>
+      <input type="text" id="gamenamesubmittion" name="gamename" required>
+      <input type="submit" value="Submit" id="submitButton">
     </form>
+
     <script>
-      document.getElementById("teamidsubmittion").value = localStorage.getItem("teamId")
-      document.getElementById("teamTokensubmittion").value = localStorage.getItem("teamToken")
-      document.getElementById("gamenamesubmittion").value = document.querySelector('.game h2').innerText
-      console.log(localStorage.getItem("teamId")
-      )</script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("form");
+        const teamId = document.getElementById("teamidsubmittion");
+        const teamToken = document.getElementById("teamTokensubmittion");
+        const gameName = document.getElementById("gamenamesubmittion");
+        const submitButton = document.getElementById("submitButton");
+
+        teamId.value = localStorage.getItem("teamId") || "";
+        teamToken.value = localStorage.getItem("teamToken") || "";
+        gameName.value = document.querySelector(".game h2")?.innerText || "";
+
+        form.addEventListener("submit", event => {
+          if (!teamId.value || !teamToken.value || !gameName.value) {
+            event.preventDefault();
+            document.querySelector(".modal-content p").innerText = "Please Log in Again";
+            document.getElementById("modal-toggle").click();
+            setTimeout(() => location.href = "../", 2000);
+            document.querySelector("#alert-button").onclick = () => {
+              location.href = "../";
+            };
+          } else {
+            event.preventDefault(); // Prevent the default form submission
+            // Create a FormData object
+            const formData = new FormData(form);
+            // Use fetch to submit the form data
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+              })
+              .then(response => response.text())
+              .then(result => {
+                // Handle the response from the server
+                console.log('Success:', result);
+                document.querySelector(".modal-content p").innerText = "Waiting for auramaster's review";
+                document.getElementById("modal-toggle").click();
+                setTimeout(() => location.href = "../scoreboard", 2000);
+                document.querySelector("#alert-button").onclick = () => {
+                  location.href = "../scoreboard";
+                };
+              })
+              .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Error:', error);
+                alert('Error uploading file!');
+              });
+          }
+        });
+      });
+    </script>
+
+
   </main>
   <footer>
     <div>
@@ -99,7 +154,6 @@
     //     body: JSON.stringify(data)
     //   }).then(res => res.json()).then(data => console.log(data))
     // });
-
   </script>
 
 </body>
