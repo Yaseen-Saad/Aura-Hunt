@@ -37,6 +37,7 @@
                 <tr>
                     <th>Rank</th>
                     <th>Team</th>
+                    <th>Questions</th>
                     <th>Aura</th>
                 </tr>
                 <% locals.scores.sort((a, b)=> b.score - a.score).forEach((score,i) => { %>
@@ -46,6 +47,9 @@
                             <%= i+1 %>
                         </td>
                         <td><%= score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id %>
+                        </td>
+                        <td>
+                            <%= score.questions.map(question => question.id) %>
                         </td>
                         <td>
                             <%= score.score %>

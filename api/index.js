@@ -38,7 +38,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   if (team && team.token === teamToken) {
     const tempPath = req.file.path;
     const imagePath = path.join(__dirname, "../uploads/", `${teamId}_${gameName}_${Date.now()}.png`);
- 
+
     fs.rename(tempPath, imagePath, err => {
       if (err) return handleError(err, res);
       const game = jsonFile.find(question => question.name === req.body.gamename); // assuming questionId is sent in the request
@@ -70,13 +70,10 @@ app.get('/games', (req, res) => {
   const games = jsonFile.map(game => `<li><a href="/game/${game.name}">${game.name}</a></li>`);
   res.send(`<!DOCTYPE html><html><body><h1>Game List</h1><ul>${games.join('')}</ul></body></html>`);
 });
-app.get('/score/:id', (req, res) => {
-  const scores = scoresFile.find(team => +team.id == req.params.id);
-  if (scores) {
-    res.send(scores)
-  } else {
-    res.send({ message: "not found", data: req.params.id })
-  }
+app.get('/adminEditScore', (req, res) => {
+  // const scores = scoresFile.find(team => +team.id == req.params.id);
+  res.render("detailedScoreboard", { scores: scoresFile })
+  // res.send({ message: "not found", data: req.params.id })
 });
 // Start the Server
 const port = process.env.PORT || 3000;
