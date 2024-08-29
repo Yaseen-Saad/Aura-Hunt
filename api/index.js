@@ -55,7 +55,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
           res.status(200).contentType("text/plain").end("File uploaded!");
         });
       } else {
-        res.status(400).json({ message: 'Question not found' });
+        res.status(500).json({ message: 'Question not found' });
       }
     });
   } else {
@@ -70,9 +70,13 @@ app.get('/games', (req, res) => {
   const games = jsonFile.map(game => `<li><a href="/game/${game.name}">${game.name}</a></li>`);
   res.send(`<!DOCTYPE html><html><body><h1>Game List</h1><ul>${games.join('')}</ul></body></html>`);
 });
-app.get('/score', (req, res) => {
-  const scores = scoresFile.find(team => team.id == req.body.id);
-  res.send(scores)
+app.get('/score/:id', (req, res) => {
+  const scores = scoresFile.find(team => +team.id == req.params.id);
+  if(scores){
+    res.send(scores)
+  }else{
+    res.send({message:"not found" ,data:req.params.id})
+  }
 });
 // Start the Server
 const port = process.env.PORT || 3000;
