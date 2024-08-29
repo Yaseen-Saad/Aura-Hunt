@@ -12,36 +12,6 @@ const scoresFile = require('../data/scores.json');
 // Initializations
 const app = express();
 
-// Images Submition
-const upload = multer({ dest: 'uploads/' });
-
-app.post('/upload', upload.single('file'), (req, res) => {
-  const teamId = req.body.teamid;
-  const teamToken = req.body.teamtoken;
-  const gameName = req.body.gamename;
-  const team = scoresFile.find(team => team.id === teamId);
-  console.log(team, teamId, teamToken, scoresFile);
-  if (team && team.token === teamToken) {
-    const tempPath = req.file.path;
-    const imagePath = path.join(__dirname, "../uploads/", `${teamId}_${gameName}_${Date.now()}.png`);
-    fs.rename(tempPath, imagePath, err => {
-      if (err) return handleError(err, res);
-      res.status(200).contentType("text/plain").end("File uploaded!");
-    });
-  } else {
-    res.status(200).send({ message: "Please Login Again!" });
-  }
-});
-
-function handleError(err, res) {
-  console.error(err);
-  res.status(500).send({ message: 'Server Error' });
-}
-
-
-
-
-
 // Middleware Setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -57,12 +27,53 @@ app.use((req, res, next) => {
   next();
 });
 
-// Route to List All Games
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  const teamId = req.body.teamid;
+  const teamToken = req.body.teamtoken;
+  const gameName = req.body.gamename;
+  const team = scoresFile.find(team => team.id === teamId);
+  if (team && team.token === teamToken) {
+    const tempPath = req.file.path;
+    const imagePath = path.join(__dirname, "../uploads/", `${teamId}_${gameName}_${Date.now()}.png`);
+    // Rename the file to the new path
+    fs.rename(tempPath, imagePath, err => {
+      if (err) return handleError(err, res);
+      // Find the relevant question to update
+      const question = team.questions.find(q => q.id === parseInt(req.body.questionId, 10)); // assuming questionId is sent in the request
+      if (question) {
+        question.attempts += 1; // Update attempts as needed
+        question.checked = false; // Set checked status
+        question.files.push(imagePath); // Add new image path
+        // Write the updated scoresFile back to JSON
+        fs.writeFile(path.join(__dirname, '../data/scores.json'), JSON.stringify(scoresFile, null, 2), err => {
+          if (err) {
+            console.error('Error writing to scores.json:', err);
+            return res.status(500).json({ message: 'Failed to update scores' });
+          }
+          res.status(200).contentType("text/plain").end("File uploaded!");
+        });
+      } else {
+        res.status(400).json({ message: 'Question not found' });
+      }
+    });
+  } else {
+    res.status(200).send({ message: "Please Login Again!" });
+  }
+});
+function handleError(err, res) {
+  console.error(err);
+  res.status(500).send({ message: 'Server Error' });
+}
 app.get('/games', (req, res) => {
   const games = jsonFile.map(game => `<li><a href="/game/${game.name}">${game.name}</a></li>`);
   res.send(`<!DOCTYPE html><html><body><h1>Game List</h1><ul>${games.join('')}</ul></body></html>`);
 });
-
+app.get('/score', (req, res) => {
+  const scores = scoresFile.find(team => team.id == req.body.id);
+  res.send(scores)
+});
 // Start the Server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
