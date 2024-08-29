@@ -1305,22 +1305,26 @@
     "questions": [
       {
         "id": 0,
-        "attempts": 1,
+        "attempts": [],
         "solved": false
       },
       {
         "id": 1,
-        "attempts": 12,
-        "solved": false
+        "attempts": [
+          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1724967839681.png",
+          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1724967853565.png"
+        ],
+        "solved": false,
+        "checked": false
       },
       {
         "id": 2,
-        "attempts": 7,
+        "attempts": [],
         "solved": false
       },
       {
         "id": 3,
-        "attempts": 7,
+        "attempts": [],
         "solved": true
       }
     ]

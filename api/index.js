@@ -9,6 +9,7 @@ const multer = require("multer");
 // JSON Data
 const jsonFile = require('../data/questions.json');
 const scoresFile = require('../data/scores.json');
+const { log } = require('console');
 // Initializations
 const app = express();
 
@@ -37,15 +38,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
   if (team && team.token === teamToken) {
     const tempPath = req.file.path;
     const imagePath = path.join(__dirname, "../uploads/", `${teamId}_${gameName}_${Date.now()}.png`);
-    // Rename the file to the new path
+ 
     fs.rename(tempPath, imagePath, err => {
       if (err) return handleError(err, res);
-      // Find the relevant question to update
-      const question = team.questions.find(q => q.id === parseInt(req.body.questionId, 10)); // assuming questionId is sent in the request
+      const game = jsonFile.find(question => question.name === req.body.gamename); // assuming questionId is sent in the request
+      const question = team.questions.find(q => q.id === game.id); // assuming questionId is sent in the request
       if (question) {
-        question.attempts += 1; // Update attempts as needed
         question.checked = false; // Set checked status
-        question.files.push(imagePath); // Add new image path
+        question.attempts.push(imagePath); // Add new image path
         // Write the updated scoresFile back to JSON
         fs.writeFile(path.join(__dirname, '../data/scores.json'), JSON.stringify(scoresFile, null, 2), err => {
           if (err) {
@@ -72,10 +72,10 @@ app.get('/games', (req, res) => {
 });
 app.get('/score/:id', (req, res) => {
   const scores = scoresFile.find(team => +team.id == req.params.id);
-  if(scores){
+  if (scores) {
     res.send(scores)
-  }else{
-    res.send({message:"not found" ,data:req.params.id})
+  } else {
+    res.send({ message: "not found", data: req.params.id })
   }
 });
 // Start the Server
@@ -119,22 +119,21 @@ app.post('/answer', (req, res) => {
       return res.status(200).json({ message: 'Already Solved' });
     }
     game.attempts = game.attempts === "Infinity" ? Infinity : game.attempts;
-    if (question.attempts < game.attempts) {
+    if (question.attempts.length < game.attempts) {
+      question.attempts.push(answer);
       if (game.answer === answer) {
         team.score += game.score;
-        question.attempts += 1;
         question.solved = true;
-
         updateScores(scoresFile, res, 'Correct');
       } else {
         if (game.deduction) {
           team.score -= game.deduction;
         }
         question.attempts += 1;
-        updateScores(scoresFile, res, 'Wrong Answer', 501, { rAttempts: game.attempts - question.attempts });
+        updateScores(scoresFile, res, 'Wrong Answer', 501, { rAttempts: game.attempts - question.attempts.length });
       }
     } else {
-      res.status(200).json({ message: 'No more attempts', rAttempts: game.attempts - question.attempts });
+      res.status(200).json({ message: 'No more attempts', rAttempts: game.attempts - question.attempts.length });
     }
 
   } catch (error) {
