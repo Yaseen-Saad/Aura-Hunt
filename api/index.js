@@ -10,6 +10,7 @@ const multer = require("multer");
 const jsonFile = require('../data/questions.json');
 const scoresFile = require('../data/scores.json');
 const { log } = require('console');
+const { env } = require('process');
 // Initializations
 const app = express();
 
@@ -99,6 +100,19 @@ app.get('/question/:id', (req, res) => {
 });
 // Route to Submit an Answer
 
+app.get('/score/:id', (req, res) => {
+  const scores = scoresFile.find(team => +team.id == req.params.id);
+  res.render("team", { score: scores })
+});
+app.post('/editscore', (req, res) => {
+  const team = scoresFile.find(team => +team.id == req.body.id);
+  console.log(team);
+  if (req.body.token === process.env.ADMIN_REQUEST_TOKEN) {
+    res.send(team)
+  } else {
+    res.status(500).send(process.env.ADMIN_REQUEST_TOKEN)
+  }
+});
 
 app.post('/answer', (req, res) => {
   const { teamId, gameId, answer } = req.body;

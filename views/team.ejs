@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/scoreboard.css">
+</head>
+
+<body>
+  <nav><img src="/assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <a href="../" class="button-77" id="instructions">Instructions</a>
+      <a href="../scoreboard" class="button-77" id="scoreboard">Scoreboard</a>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+    <span id="gamedata" style="display: none;">
+    </span>
+    <div class="glitch">
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+    </div>
+    <div class="game">
+      <h2>Team: <%= locals.score.id %></h2>
+      <h2>Score: <%= locals.score.score %></h2>
+      <table>
+        <tr>
+          <th>Question</th>
+          <th>Attempts</th>
+          <th>Checked</th>
+          <th>Solved</th>
+          <th>Edit</th>
+        </tr>
+        <% locals.score.questions.sort((a, b)=> a.id - b.id).forEach((question,i) => { %>
+        <tr id="<%= question.id %>">
+          <td>
+            <%= question.id%>
+          </td>
+          <td><%= question.attempts.length %>
+          </td>
+          <td><%= question.checked?true:false %>
+          </td>
+          <td>
+            <%=question.solved%>
+          </td>
+          <td>
+            <button class="edit-aura" id="button-<%=question.id %>">
+              Aura
+            </button>
+          </td>
+        </tr>
+        <% }); %>
+      </table>
+    </div>
+  </main>
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October</p>
+    </div>
+  </footer>
+  <script>
+    document.querySelectorAll("button.edit-aura").forEach(button => {
+      button.addEventListener("click", () => {
+        const value = prompt("New Aura")
+      })
+    })
+  </script>
+
+</body>
+
+</html>
