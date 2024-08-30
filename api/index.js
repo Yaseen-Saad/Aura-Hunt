@@ -1,4 +1,5 @@
 // Libraries
+require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -28,9 +29,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-
 const upload = multer({ dest: 'uploads/' });
-
 app.post('/upload', upload.single('file'), (req, res) => {
   const teamId = req.body.teamid;
   const teamToken = req.body.teamtoken;
@@ -106,11 +105,19 @@ app.get('/score/:id', (req, res) => {
 });
 app.post('/editscore', (req, res) => {
   const team = scoresFile.find(team => +team.id == req.body.id);
-  console.log(team);
   if (req.body.token === process.env.ADMIN_REQUEST_TOKEN) {
-    res.send(team)
+    console.log(team);
+    team.score += Number(req.body.aura);
+    fs.writeFile('./data/scores.json', JSON.stringify(scoresFile, null, 2), err => {
+      if (err) {
+        console.error('Error writing to scores.json:', err);
+        res.status(500).json({ message: 'Failed to update scores' });
+      } else {
+        res.status(200).json({ message: "score added succefully" });
+      }
+    });
   } else {
-    res.status(500).send(process.env.ADMIN_REQUEST_TOKEN)
+    res.status(500).send("Wrong Token")
   }
 });
 
