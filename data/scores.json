@@ -1306,21 +1306,26 @@
       {
         "id": 0,
         "attempts": [],
-        "solved": false
+        "solved": false,
+        "checked": true
       },
       {
         "id": 1,
         "attempts": [
           "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1724967839681.png",
-          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1724967853565.png"
+          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1724967853565.png",
+          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1725016654646.png",
+          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1725016670888.png",
+          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1725016685783.png"
         ],
         "solved": false,
-        "checked": false
+        "checked": true
       },
       {
         "id": 2,
         "attempts": [],
-        "solved": false
+        "solved": false,
+        "checked": true
       },
       {
         "id": 3,

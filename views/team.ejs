@@ -40,6 +40,7 @@
       <table>
         <tr>
           <th>Question</th>
+          <th>Attempts Count</th>
           <th>Attempts</th>
           <th>Checked</th>
           <th>Solved</th>
@@ -52,12 +53,17 @@
           <td><%= question.attempts.length %>
           </td>
           <td>
-            <button class="toogle-checked button-77" id="<%= question.id %>">
+            <%question.attempts.forEach((attempt,i)=>{%>
+            <a href="<%=attempt%>"><%=i %></a>
+            <% })  %>
+          </td>
+          <td>
+            <button class="toggle-checked button-77" id="<%= question.id %>">
               <%= question.checked?true:false %>
             </button>
           </td>
           <td>
-            <button class="toogle-solved button-77" id="<%= question.id %>">
+            <button class="toggle-solved button-77" id="<%= question.id %>">
               <%= question.solved?true:false %>
             </button>
           </td>
@@ -92,10 +98,22 @@
         })
         .then(res => res.json()).then(data => console.log(data))
     })
-
     document.querySelectorAll(".toggle-checked").forEach(toggler => {
       toggler.addEventListener("click", () => {
-
+        const data = {
+          id: document.getElementById("teamname")
+            .getAttribute("data-id"),
+          questionId: toggler.id,
+          token: localStorage.getItem("token")
+        }
+        fetch("/toggleChecked", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(res => res.json()).then(data => console.log(data))
       })
     })
   </script>
