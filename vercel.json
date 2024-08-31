@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
     "rewrites": [
         {
@@ -6,13 +5,4 @@
             "destination": "/api"
         }
     ]
-=======
-{
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/api"
-        }
-    ]
->>>>>>> e7b84ecc9f14aef516ea68d987acf57dcc4fc3f8
 }
