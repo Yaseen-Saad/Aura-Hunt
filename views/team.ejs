@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/scoreboard.css">
+</head>
+
+<body>
+  <nav><img src="/assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <a href="../" class="button-77" id="instructions">Instructions</a>
+      <a href="../scoreboard" class="button-77" id="scoreboard">Scoreboard</a>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+    <span id="gamedata" style="display: none;"></span>
+    <div class="glitch">
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+    </div>
+    <div class="game">
+      <h2 id="teamname" data-id="<%= score.id %>">Team: <%= score.id %></h2>
+      <h2>Score: <%= score.score %></h2>
+      <button class="button-77" id="edit-aura">
+        Edit Aura
+      </button>
+      <table>
+        <tr>
+          <th>Question</th>
+          <th>Attempts Count</th>
+          <th>Attempts</th>
+          <th>Checked</th>
+          <th>Solved</th>
+        </tr>
+        <% if (Array.isArray(score.questions)) { %>
+          <% score.questions.sort((a, b) => a.id - b.id).forEach((question) => { %>
+            <tr id="<%= question.id %>">
+              <td><%= question.id %></td>
+              <td><%= question.attempts.length %></td>
+              <td>
+                <% question.attempts.forEach((attempt, i) => { %>
+                  <a href="<%= attempt %>"><%= i %></a>
+                <% }) %>
+              </td>
+              <td>
+                <button class="toggle-checked button-77" id="<%= question.id %>">
+                  <%= question.checked ? 'True' : 'False' %>
+                </button>
+              </td>
+              <td>
+                <button class="toggle-solved button-77" id="<%= question.id %>">
+                  <%= question.solved ? 'True' : 'False' %>
+                </button>
+              </td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="5">No questions available</td>
+          </tr>
+        <% } %>
+        
+      </table>
+    </div>
+  </main>
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October</p>
+    </div>
+  </footer>
+  <script>
+    const button = document.querySelector("button#edit-aura");
+    button.addEventListener("click", () => {
+      const value = prompt("New Aura");
+      const teamId = document.getElementById("teamname").getAttribute("data-id");
+      const data = {
+        id: teamId,
+        aura: value,
+        token: localStorage.getItem("token")
+      };
+      fetch("/editscore", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error:', error));
+    });
+
+    document.querySelectorAll(".toggle-checked").forEach(toggler => {
+      toggler.addEventListener("click", () => {
+        const teamId = document.getElementById("teamname").getAttribute("data-id");
+        const data = {
+          id: teamId,
+          questionId: toggler.id,
+          token: localStorage.getItem("token")
+        };
+        fetch("/toggleChecked", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+      });
+    });
+  </script>
+</body>
+
+</html>

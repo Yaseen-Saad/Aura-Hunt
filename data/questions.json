@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Animal Friendly",
+    "description": "Touch a cat without running away from you!",
+    "score": 200,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
+    "id": 2,
+    "name": "Green Man",
+    "description": "Find the school's hidden farm",
+    "score": 250,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
+    "id": 3,
+    "name": "Land Mark",
+    "description": "Get a photo for a landmark that no other one will get a photo for – classrooms and rooms are not allowed, only places at the school. (graded at the end of the competition)",
+    "score": 500,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
+    "id": 4,
+    "name": "Where are you?",
+    "description": "What is the official school name",
+    "score": 50,
+    "deduction": 10,
+    "attempts": 5,
+    "answer": "STEM High School for Boys - 6th of October"
+  },
+  {
+    "id": 6,
+    "name": "How Beautiful is the moon !!",
+    "description": "Take a picture of the moon and upload it rapidly",
+    "type": "firstToSolve",
+    "score": 100,
+    "attempts": "Infinity",
+    "proof": true
+  }
+]
