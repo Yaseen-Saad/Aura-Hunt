@@ -45,7 +45,7 @@
           <th>Solved</th>
         </tr>
         <% if (Array.isArray(score.questions)) { %>
-          <% score.questions.sort((a, b) => a.id - b.id).forEach((question) => { %>
+          <% score.questions.sort((a, b) => +a.id - +b.id).forEach((question) => { %>
             <tr id="<%= question.id %>">
               <td><%= question.id %></td>
               <td><%= question.attempts.length %></td>

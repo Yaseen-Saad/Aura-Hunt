@@ -1301,39 +1301,7 @@
     "id": "219",
     "score": 50,
     "token": "uwei0ruwes4234sm20342384n23094s32",
-    "password": "STEM_October",
-    "questions": [
-      {
-        "id": 0,
-        "attempts": [],
-        "solved": false,
-        "checked": true
-      },
-      {
-        "id": 1,
-        "attempts": [
-          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1724967839681.png",
-          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1724967853565.png",
-          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1725016654646.png",
-          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1725016670888.png",
-          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1725016685783.png",
-          "F:\\DESKTOP\\Aura-Hunt\\uploads\\219_Animal Friendly_1725032212959.png"
-        ],
-        "solved": false,
-        "checked": false
-      },
-      {
-        "id": 2,
-        "attempts": [],
-        "solved": false,
-        "checked": true
-      },
-      {
-        "id": 3,
-        "attempts": [],
-        "solved": true
-      }
-    ]
+    "password": "STEM_October"
   },
   {
     "id": "220",
