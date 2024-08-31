@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/scoreboard.css">
+</head>
+<body>
+  <nav><img src="/assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <a href="../" class="button-77" id="instructions">Instructions</a>
+      <a href="../scoreboard" class="button-77" id="scoreboard">Scoreboard</a>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+    <span id="gamedata" style="display: none;"></span>
+    <div class="glitch">
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+    </div>
+    <div class="game">
+      <h2>Score Board</h2>
+      <table>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+          <th>Solved</th>
+          <th>Aura</th>
+          <th>Details</th>
+        </tr>
+        <% locals.scores.sort((a, b) => b.score - a.score).forEach((score, i) => { %>
+        <tr id="<%= score.id.length != 3 ? "0".repeat(3 - score.id.length) + score.id : score.id %>">
+          <td><%= i + 1 %></td>
+          <td><%= score.id.length != 3 ? "0".repeat(3 - score.id.length) + score.id : score.id %></td>
+          <td>
+            <%= (Array.isArray(score.questions) ? score.questions.filter(question => question.solved).length : 0) %>
+          </td>
+          <td><%= score.score %></td>
+          <td>
+            <button class="button-77" id="<%= score.id %>">View</button>
+          </td>
+        </tr>
+        <% }); %>
+      </table>
+    </div>
+  </main>
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October</p>
+    </div>
+  </footer>
+  <script>
+    document.querySelectorAll("button").forEach(button => {
+      button.addEventListener("click", (e) => {
+        location.assign("/score/" + button.id);
+      });
+    });
+
+    const teamId = localStorage.getItem('teamId');
+    if (teamId) {
+      document.getElementById(teamId)?.classList.add('team');
+    }
+
+    const hide = document.getElementById('hide');
+    const txt2 = document.getElementById('txt2');
+    const txt = document.getElementById('txt');
+
+    if (txt) {
+      resize();
+      txt.addEventListener("input", resize);
+      txt.addEventListener("blur", () => {
+        if (!txt.value) txt.value = "Answer Here...";
+        resize();
+      });
+    }
+
+    setInterval(() => {
+      document.querySelector(".glitch").classList.toggle("active");
+      setTimeout(() => {
+        document.querySelector(".glitch").classList.toggle("active");
+      }, 1000);
+    }, 10000);
+
+    function resize() {
+      if (hide && txt) {
+        hide.textContent = txt.value;
+        txt2.style.width = hide.getBoundingClientRect().width + 'px';
+        txt.style.width = hide.getBoundingClientRect().width + 'px';
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+<!-- 
+    fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(response => response.json())
+      .then(data => console.log(data));
+    const button = document.getElementById('make-call');
+    button.addEventListener('click', () => {
+      const data = {
+        teamId: 219,
+        gameId: 1,
+        answer: "Xffsd"
+      }
+      console.log(JSON.stringify(data));
+
+      fetch('http://localhost:3000/answer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(res => res.json()).then(data => console.log(data))
+    });
