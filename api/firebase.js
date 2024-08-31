@@ -16,12 +16,12 @@ if (!serviceAccount.project_id) {
   throw new Error('Service account object must contain a string "project_id" property.');
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'aura-hunt.appspot.com' // Replace with your Firebase Storage bucket
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   storageBucket: 'aura-hunt.appspot.com' // Replace with your Firebase Storage bucket
+// });
 
-const db = admin.firestore();
-const bucket = admin.storage().bucket();
+// const db = admin.firestore();
+// const bucket = admin.storage().bucket();
 
 module.exports = { db, bucket };
