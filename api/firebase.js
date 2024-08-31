@@ -1,7 +1,8 @@
 // firebase.js
 const admin = require('firebase-admin');
+const serviceAccount = require(process.env.FIREBASEACCOUNT)
 admin.initializeApp({
-    credential: admin.credential.cert(process.env.FIREBASEACCOUNT),
+    credential: admin.credential.cert(serviceAccount),
     storageBucket: 'aura-hunt.appspot.com' // Replace with your Firebase Storage bucket
 });
 
