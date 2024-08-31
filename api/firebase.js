@@ -1,4 +1,4 @@
-const admin = require('firebase-admin');
+// const admin = require('firebase-admin');
 
 const serviceAccountString = process.env.FIREBASECONFIGS;
 if (!serviceAccountString) {
@@ -24,4 +24,4 @@ if (!serviceAccount.project_id) {
 // const db = admin.firestore();
 // const bucket = admin.storage().bucket();
 
-module.exports = { db, bucket };
+// module.exports = { db, bucket };

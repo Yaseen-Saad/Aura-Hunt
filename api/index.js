@@ -45,8 +45,22 @@ const updateDocument = async (ref, data) => {
 
 // Scoreboard Endpoint
 app.get('/scoreboard', async (req, res) => {
+  const serviceAccountString = process.env.FIREBASECONFIGS;
+  if (!serviceAccountString) {
+    throw new Error('FIREBASECONFIGS environment variable is not set');
+  }
+  
+  let serviceAccount;
   try {
-    console.log(process.env.FIREBASECONFIGS)
+    serviceAccount = JSON.parse(serviceAccountString);
+  } catch (error) {
+    throw new Error('Error parsing FIREBASECONFIGS environment variable: ' + error.message);
+  }
+  
+  if (!serviceAccount.project_id) {
+    throw new Error('Service account object must contain a string "project_id" property.');
+  }
+  try {
     const scoresSnapshot = await db.collection('scores').get();
     const scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, score: doc.data().score }));
     res.render('scoreboard', { scores: scores });
