@@ -409,7 +409,7 @@ body footer p {
   left: 0;
 }
 .glitch.active .line:nth-child(1) {
-  animation: clip 3000ms -500ms linear infinite, glitch1 500ms -780ms linear infinite;
+  animation: clip 3000ms -500ms linear infinite, glitch1 500ms -3404ms linear infinite;
 }
 @keyframes glitch1 {
   0% {
@@ -424,11 +424,11 @@ body footer p {
     color: #4E9A26;
   }
   90% {
-    transform: translateX(1px);
+    transform: translateX(-2px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(3px);
+    transform: translateX(-2px);
     color: #fff;
   }
   100% {
@@ -436,7 +436,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(2) {
-  animation: clip 3000ms -1000ms linear infinite, glitch2 500ms -1165ms linear infinite;
+  animation: clip 3000ms -1000ms linear infinite, glitch2 500ms -3193ms linear infinite;
 }
 @keyframes glitch2 {
   0% {
@@ -447,15 +447,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(-2px);
+    transform: translateX(-3px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(3px);
+    transform: translateX(2px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(4px);
+    transform: translateX(1px);
     color: #fff;
   }
   100% {
@@ -463,7 +463,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(3) {
-  animation: clip 3000ms -1500ms linear infinite, glitch3 500ms -3345ms linear infinite;
+  animation: clip 3000ms -1500ms linear infinite, glitch3 500ms -2728ms linear infinite;
 }
 @keyframes glitch3 {
   0% {
@@ -474,15 +474,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(3px);
+    transform: translateX(-4px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-1px);
+    transform: translateX(-4px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(-4px);
+    transform: translateX(2px);
     color: #fff;
   }
   100% {
@@ -490,7 +490,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(4) {
-  animation: clip 3000ms -2000ms linear infinite, glitch4 500ms -1610ms linear infinite;
+  animation: clip 3000ms -2000ms linear infinite, glitch4 500ms -1474ms linear infinite;
 }
 @keyframes glitch4 {
   0% {
@@ -505,11 +505,11 @@ body footer p {
     color: #4E9A26;
   }
   90% {
-    transform: translateX(-4px);
+    transform: translateX(5px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(-2px);
+    transform: translateX(0px);
     color: #fff;
   }
   100% {
@@ -517,7 +517,7 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(5) {
-  animation: clip 3000ms -2500ms linear infinite, glitch5 500ms -2141ms linear infinite;
+  animation: clip 3000ms -2500ms linear infinite, glitch5 500ms -1775ms linear infinite;
 }
 @keyframes glitch5 {
   0% {
@@ -528,15 +528,15 @@ body footer p {
     color: #fff;
   }
   85% {
-    transform: translateX(-1px);
+    transform: translateX(3px);
     color: #4E9A26;
   }
   90% {
-    transform: translateX(5px);
+    transform: translateX(-1px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(-1px);
+    transform: translateX(0px);
     color: #fff;
   }
   100% {
@@ -544,90 +544,9 @@ body footer p {
   }
 }
 .glitch.active .line:nth-child(6) {
-  animation: clip 3000ms -3000ms linear infinite, glitch6 500ms -1852ms linear infinite;
+  animation: clip 3000ms -3000ms linear infinite, glitch6 500ms -2775ms linear infinite;
 }
 @keyframes glitch6 {
-  0% {
-    transform: translateX(0);
-  }
-  80% {
-    transform: translateX(0);
-    color: #fff;
-  }
-  85% {
-    transform: translateX(-4px);
-    color: #4E9A26;
-  }
-  90% {
-    transform: translateX(1px);
-    color: #AC1212;
-  }
-  95% {
-    transform: translateX(-4px);
-    color: #fff;
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-.glitch.active .line:nth-child(7) {
-  animation: clip 3000ms -3500ms linear infinite, glitch7 500ms -268ms linear infinite;
-}
-@keyframes glitch7 {
-  0% {
-    transform: translateX(0);
-  }
-  80% {
-    transform: translateX(0);
-    color: #fff;
-  }
-  85% {
-    transform: translateX(-4px);
-    color: #4E9A26;
-  }
-  90% {
-    transform: translateX(1px);
-    color: #AC1212;
-  }
-  95% {
-    transform: translateX(3px);
-    color: #fff;
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-.glitch.active .line:nth-child(8) {
-  animation: clip 3000ms -4000ms linear infinite, glitch8 500ms -2478ms linear infinite;
-}
-@keyframes glitch8 {
-  0% {
-    transform: translateX(0);
-  }
-  80% {
-    transform: translateX(0);
-    color: #fff;
-  }
-  85% {
-    transform: translateX(-2px);
-    color: #4E9A26;
-  }
-  90% {
-    transform: translateX(-4px);
-    color: #AC1212;
-  }
-  95% {
-    transform: translateX(5px);
-    color: #fff;
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-.glitch.active .line:nth-child(9) {
-  animation: clip 3000ms -4500ms linear infinite, glitch9 500ms -1320ms linear infinite;
-}
-@keyframes glitch9 {
   0% {
     transform: translateX(0);
   }
@@ -640,21 +559,21 @@ body footer p {
     color: #4E9A26;
   }
   90% {
-    transform: translateX(0px);
+    transform: translateX(1px);
     color: #AC1212;
   }
   95% {
-    transform: translateX(5px);
+    transform: translateX(-3px);
     color: #fff;
   }
   100% {
     transform: translateX(0);
   }
 }
-.glitch.active .line:nth-child(10) {
-  animation: clip 3000ms -5000ms linear infinite, glitch10 500ms -1953ms linear infinite;
+.glitch.active .line:nth-child(7) {
+  animation: clip 3000ms -3500ms linear infinite, glitch7 500ms -560ms linear infinite;
 }
-@keyframes glitch10 {
+@keyframes glitch7 {
   0% {
     transform: translateX(0);
   }
@@ -667,11 +586,92 @@ body footer p {
     color: #4E9A26;
   }
   90% {
+    transform: translateX(-1px);
+    color: #AC1212;
+  }
+  95% {
+    transform: translateX(1px);
+    color: #fff;
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.glitch.active .line:nth-child(8) {
+  animation: clip 3000ms -4000ms linear infinite, glitch8 500ms -107ms linear infinite;
+}
+@keyframes glitch8 {
+  0% {
+    transform: translateX(0);
+  }
+  80% {
+    transform: translateX(0);
+    color: #fff;
+  }
+  85% {
+    transform: translateX(1px);
+    color: #4E9A26;
+  }
+  90% {
     transform: translateX(-2px);
     color: #AC1212;
   }
   95% {
+    transform: translateX(0px);
+    color: #fff;
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.glitch.active .line:nth-child(9) {
+  animation: clip 3000ms -4500ms linear infinite, glitch9 500ms -314ms linear infinite;
+}
+@keyframes glitch9 {
+  0% {
+    transform: translateX(0);
+  }
+  80% {
+    transform: translateX(0);
+    color: #fff;
+  }
+  85% {
+    transform: translateX(1px);
+    color: #4E9A26;
+  }
+  90% {
+    transform: translateX(-4px);
+    color: #AC1212;
+  }
+  95% {
     transform: translateX(-3px);
+    color: #fff;
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+.glitch.active .line:nth-child(10) {
+  animation: clip 3000ms -5000ms linear infinite, glitch10 500ms -1867ms linear infinite;
+}
+@keyframes glitch10 {
+  0% {
+    transform: translateX(0);
+  }
+  80% {
+    transform: translateX(0);
+    color: #fff;
+  }
+  85% {
+    transform: translateX(1px);
+    color: #4E9A26;
+  }
+  90% {
+    transform: translateX(3px);
+    color: #AC1212;
+  }
+  95% {
+    transform: translateX(5px);
     color: #fff;
   }
   100% {
