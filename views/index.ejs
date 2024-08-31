@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -167,4 +168,175 @@
 
 </body>
 
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    .game {
+      display: flex !important;
+      flex-direction: column;
+    }
+
+    h2 {
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav><img src="/assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <a href="../" class="button-77" id="instructions">Instructions</a>
+      <a href="../scoreboard" class="button-77" id="scoreboard">Scoreboard</a>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+    <div class="modal-container">
+      <input id="modal-toggle" type="checkbox">
+      <label class="modal-backdrop" for="modal-toggle"></label>
+      <div class="modal-content">
+        <label class="modal-close" for="modal-toggle">&#x2715;</label>
+        <p>Ready to Hunt Aura ?</p>
+        <label class="button-77" id="alert-button" for="modal-toggle">OK</label>
+      </div>
+    </div>
+    <span id="gameId" style="display: none;">
+      <%=locals.id%>
+    </span>
+    <div class="glitch">
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+    </div>
+    <div class="game">
+      <h2>
+        <%=locals.name%>
+      </h2>
+      <p>
+        <%=locals.description%>
+      </p>
+      <%if(locals.answer){%>
+      <div>
+        <div id="txt1" class="input">
+          <span id="hide1" class="hide"></span>
+          <input id="teamId" type="text" value="Answer here ...">
+        </div>
+        <button class="button-77" id="submit">Check</button>
+      </div>
+      <%} %>
+    </div>
+    <form id="form" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" required>
+      <input type="text" id="teamidsubmittion" name="teamid" required>
+      <input type="text" id="teamTokensubmittion" name="teamtoken" required>
+      <input type="text" id="gamenamesubmittion" name="gamename" required>
+      <input type="submit" value="Submit" id="submitButton">
+    </form>
+
+
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("form");
+  const teamId = document.getElementById("teamidsubmittion");
+  const teamToken = document.getElementById("teamTokensubmittion");
+  const gameName = document.getElementById("gamenamesubmittion");
+
+  // Populate fields with data from localStorage
+  teamId.value = localStorage.getItem("teamId") || "";
+  teamToken.value = localStorage.getItem("teamToken") || "";
+  gameName.value = document.querySelector(".game h2")?.innerText || "";
+
+  form.addEventListener("submit", event => {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Validate form data
+    if (!teamId.value || !teamToken.value || !gameName.value) {
+      document.querySelector(".modal-content p").innerText = "Please Log in Again";
+      document.getElementById("modal-toggle").click();
+      setTimeout(() => location.href = "../", 2000);
+      document.querySelector("#alert-button").onclick = () => {
+        location.href = "../";
+      };
+      return;
+    }
+
+    // Create a FormData object from the form
+    const formData = new FormData(form);
+
+    // Use fetch to submit the form data via AJAX
+    fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.message === 'File uploaded successfully!') {
+          // Handle successful response
+          document.querySelector(".modal-content p").innerText = "Waiting for auramaster's review";
+          document.getElementById("modal-toggle").click();
+          setTimeout(() => location.href = "../scoreboard", 2000);
+          document.querySelector("#alert-button").onclick = () => {
+            location.href = "../scoreboard";
+          };
+        } else {
+          throw new Error(result.message);
+        }
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error uploading file:', error);
+        alert('Error uploading file!');
+      });
+  });
+});
+
+    </script>
+
+
+
+  </main>
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October</p>
+    </div>
+  </footer>
+  <script src="/assets/js/game.js"></script>
+  <script>
+    // fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {
+    //   method: 'GET',
+    //   headers: { 'Content-Type': 'application/json' },
+    // })
+    //   .then(response => response.json())
+    //   .then(data => console.log(data));
+    // const button = document.getElementById('make-call');
+    // button.addEventListener('click', () => {
+    //   const data = {
+    //     teamId: 219, gameId: 1, answer: "Xffsd"
+    //   }
+    //   console.log(JSON.stringify(data));
+
+    //   fetch('http://localhost:3000/answer', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(data)
+    //   }).then(res => res.json()).then(data => console.log(data))
+    // });
+  </script>
+
+</body>
+
+>>>>>>> e7b84ecc9f14aef516ea68d987acf57dcc4fc3f8
 </html>
