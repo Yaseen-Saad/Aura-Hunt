@@ -18,8 +18,7 @@
   </nav>
   <div class="overlayer"></div>
   <main>
-    <span id="gamedata" style="display: none;">
-    </span>
+    <span id="gamedata" style="display: none;"></span>
     <div class="glitch">
       <div class="line">Aura Hunt</div>
       <div class="line">Aura Hunt</div>
@@ -32,8 +31,8 @@
       <div class="line">Aura Hunt</div>
     </div>
     <div class="game">
-      <h2 id="teamname" data-id="<%= locals.score.id %>">Team: <%= locals.score.id %></h2>
-      <h2>Score: <%= locals.score.score %></h2>
+      <h2 id="teamname" data-id="<%= score.id %>">Team: <%= score.id %></h2>
+      <h2>Score: <%= score.score %></h2>
       <button class="button-77" id="edit-aura">
         Edit Aura
       </button>
@@ -45,30 +44,34 @@
           <th>Checked</th>
           <th>Solved</th>
         </tr>
-        <% locals.score.questions.sort((a, b)=> a.id - b.id).forEach((question,i) => { %>
-        <tr id="<%= question.id %>">
-          <td>
-            <%= question.id%>
-          </td>
-          <td><%= question.attempts.length %>
-          </td>
-          <td>
-            <%question.attempts.forEach((attempt,i)=>{%>
-            <a href="<%=attempt%>"><%=i %></a>
-            <% })  %>
-          </td>
-          <td>
-            <button class="toggle-checked button-77" id="<%= question.id %>">
-              <%= question.checked?true:false %>
-            </button>
-          </td>
-          <td>
-            <button class="toggle-solved button-77" id="<%= question.id %>">
-              <%= question.solved?true:false %>
-            </button>
-          </td>
-        </tr>
-        <% }); %>
+        <% if (Array.isArray(score.questions)) { %>
+          <% score.questions.sort((a, b) => a.id - b.id).forEach((question) => { %>
+            <tr id="<%= question.id %>">
+              <td><%= question.id %></td>
+              <td><%= question.attempts.length %></td>
+              <td>
+                <% question.attempts.forEach((attempt, i) => { %>
+                  <a href="<%= attempt %>"><%= i %></a>
+                <% }) %>
+              </td>
+              <td>
+                <button class="toggle-checked button-77" id="<%= question.id %>">
+                  <%= question.checked ? 'True' : 'False' %>
+                </button>
+              </td>
+              <td>
+                <button class="toggle-solved button-77" id="<%= question.id %>">
+                  <%= question.solved ? 'True' : 'False' %>
+                </button>
+              </td>
+            </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="5">No questions available</td>
+          </tr>
+        <% } %>
+        
       </table>
     </div>
   </main>
@@ -80,44 +83,46 @@
   <script>
     const button = document.querySelector("button#edit-aura");
     button.addEventListener("click", () => {
-      const value = prompt("New Aura")
-      console.log(document.getElementById("teamname")
-        .getAttribute("data-id"));
+      const value = prompt("New Aura");
+      const teamId = document.getElementById("teamname").getAttribute("data-id");
       const data = {
-        id: document.getElementById("teamname")
-          .getAttribute("data-id"),
+        id: teamId,
         aura: value,
         token: localStorage.getItem("token")
-      }
+      };
       fetch("/editscore", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error:', error));
+    });
+
+    document.querySelectorAll(".toggle-checked").forEach(toggler => {
+      toggler.addEventListener("click", () => {
+        const teamId = document.getElementById("teamname").getAttribute("data-id");
+        const data = {
+          id: teamId,
+          questionId: toggler.id,
+          token: localStorage.getItem("token")
+        };
+        fetch("/toggleChecked", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)
         })
-        .then(res => res.json()).then(data => console.log(data))
-    })
-    document.querySelectorAll(".toggle-checked").forEach(toggler => {
-      toggler.addEventListener("click", () => {
-        const data = {
-          id: document.getElementById("teamname")
-            .getAttribute("data-id"),
-          questionId: toggler.id,
-          token: localStorage.getItem("token")
-        }
-        fetch("/toggleChecked", {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-          })
-          .then(res => res.json()).then(data => console.log(data))
-      })
-    })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+      });
+    });
   </script>
-
 </body>
 
 </html>

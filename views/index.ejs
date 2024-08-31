@@ -75,63 +75,63 @@
       <input type="submit" value="Submit" id="submitButton">
     </form>
 
+
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("form");
-        const teamId = document.getElementById("teamidsubmittion");
-        const teamToken = document.getElementById("teamTokensubmittion");
-        const gameName = document.getElementById("gamenamesubmittion");
-        const submitButton = document.getElementById("submitButton");
+  document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("form");
+  const teamId = document.getElementById("teamidsubmittion");
+  const teamToken = document.getElementById("teamTokensubmittion");
+  const gameName = document.getElementById("gamenamesubmittion");
 
-        // Populate fields with data from localStorage
-        teamId.value = localStorage.getItem("teamId") || "";
-        teamToken.value = localStorage.getItem("teamToken") || "";
-        gameName.value = document.querySelector(".game h2")?.innerText || "";
+  // Populate fields with data from localStorage
+  teamId.value = localStorage.getItem("teamId") || "";
+  teamToken.value = localStorage.getItem("teamToken") || "";
+  gameName.value = document.querySelector(".game h2")?.innerText || "";
 
-        form.addEventListener("submit", event => {
-          event.preventDefault(); // Prevent the default form submission
+  form.addEventListener("submit", event => {
+    event.preventDefault(); // Prevent the default form submission
 
-          // Validate form data
-          if (!teamId.value || !teamToken.value || !gameName.value) {
-            document.querySelector(".modal-content p").innerText = "Please Log in Again";
-            document.getElementById("modal-toggle").click();
-            setTimeout(() => location.href = "../", 2000);
-            document.querySelector("#alert-button").onclick = () => {
-              location.href = "../";
-            };
-            return;
-          }
+    // Validate form data
+    if (!teamId.value || !teamToken.value || !gameName.value) {
+      document.querySelector(".modal-content p").innerText = "Please Log in Again";
+      document.getElementById("modal-toggle").click();
+      setTimeout(() => location.href = "../", 2000);
+      document.querySelector("#alert-button").onclick = () => {
+        location.href = "../";
+      };
+      return;
+    }
 
-          // Create a FormData object from the form
-          const formData = new FormData(form);
+    // Create a FormData object from the form
+    const formData = new FormData(form);
 
-          // Use fetch to submit the form data via AJAX
-          fetch('/upload', {
-              method: 'POST',
-              body: formData,
-            })
-            .then(response => {
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response.text();
-            })
-            .then(result => {
-              // Handle successful response
-              document.querySelector(".modal-content p").innerText = "Waiting for auramaster's review";
-              document.getElementById("modal-toggle").click();
-              setTimeout(() => location.href = "../scoreboard", 2000);
-              document.querySelector("#alert-button").onclick = () => {
-                location.href = "../scoreboard";
-              };
-            })
-            .catch(error => {
-              // Handle errors
-              console.error('Error uploading file:', error);
-              alert('Error uploading file!');
-            });
-        });
+    // Use fetch to submit the form data via AJAX
+    fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.message === 'File uploaded successfully!') {
+          // Handle successful response
+          document.querySelector(".modal-content p").innerText = "Waiting for auramaster's review";
+          document.getElementById("modal-toggle").click();
+          setTimeout(() => location.href = "../scoreboard", 2000);
+          document.querySelector("#alert-button").onclick = () => {
+            location.href = "../scoreboard";
+          };
+        } else {
+          throw new Error(result.message);
+        }
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error uploading file:', error);
+        alert('Error uploading file!');
       });
+  });
+});
+
     </script>
 
 

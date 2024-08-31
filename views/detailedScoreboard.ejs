@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +7,6 @@
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/scoreboard.css">
 </head>
-
 <body>
   <nav><img src="/assets/images/Logo.svg" alt="Aura Hunt">
     <div>
@@ -18,8 +16,7 @@
   </nav>
   <div class="overlayer"></div>
   <main>
-    <span id="gamedata" style="display: none;">
-    </span>
+    <span id="gamedata" style="display: none;"></span>
     <div class="glitch">
       <div class="line">Aura Hunt</div>
       <div class="line">Aura Hunt</div>
@@ -41,23 +38,16 @@
           <th>Aura</th>
           <th>Details</th>
         </tr>
-        <% locals.scores.sort((a, b)=> b.score - a.score).forEach((score,i) => { %>
-        <tr id="<%=  score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id %>">
+        <% locals.scores.sort((a, b) => b.score - a.score).forEach((score, i) => { %>
+        <tr id="<%= score.id.length != 3 ? "0".repeat(3 - score.id.length) + score.id : score.id %>">
+          <td><%= i + 1 %></td>
+          <td><%= score.id.length != 3 ? "0".repeat(3 - score.id.length) + score.id : score.id %></td>
           <td>
-            <%=i+1%>
+            <%= (Array.isArray(score.questions) ? score.questions.filter(question => question.solved).length : 0) %>
           </td>
-          <td><%=score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id %>
-          </td>
+          <td><%= score.score %></td>
           <td>
-            <%=score.questions.filter(question => question.solved).length%>
-          </td>
-          <td>
-            <%=score.score%>
-          </td>
-          <td>
-            <button class=" button-77" id="<%=score.id%>">
-              View
-            </button>
+            <button class="button-77" id="<%= score.id %>">View</button>
           </td>
         </tr>
         <% }); %>
@@ -72,22 +62,28 @@
   <script>
     document.querySelectorAll("button").forEach(button => {
       button.addEventListener("click", (e) => {
-       location.assign("/score/" + button.id)
-      })
-    })
-
+        location.assign("/score/" + button.id);
+      });
+    });
 
     const teamId = localStorage.getItem('teamId');
-    document.getElementById(teamId).classList.add('team');
+    if (teamId) {
+      document.getElementById(teamId)?.classList.add('team');
+    }
+
     const hide = document.getElementById('hide');
     const txt2 = document.getElementById('txt2');
     const txt = document.getElementById('txt');
-    resize();
-    txt.addEventListener("input", resize);
-    txt.addEventListener("blur", () => {
-      if (!txt.value) txt.value = "Answer Here...";
-      resize()
-    });
+
+    if (txt) {
+      resize();
+      txt.addEventListener("input", resize);
+      txt.addEventListener("blur", () => {
+        if (!txt.value) txt.value = "Answer Here...";
+        resize();
+      });
+    }
+
     setInterval(() => {
       document.querySelector(".glitch").classList.toggle("active");
       setTimeout(() => {
@@ -96,16 +92,16 @@
     }, 10000);
 
     function resize() {
-      hide.textContent = txt.value;
-      txt2.style.width = hide.getBoundingClientRect().width + 'px';
-      txt.style.width = hide.getBoundingClientRect().width + 'px';
-      console.log(txt.getBoundingClientRect().width, hide.getBoundingClientRect().width, txt.getBoundingClientRect().width === hide.getBoundingClientRect().width)
+      if (hide && txt) {
+        hide.textContent = txt.value;
+        txt2.style.width = hide.getBoundingClientRect().width + 'px';
+        txt.style.width = hide.getBoundingClientRect().width + 'px';
+      }
     }
   </script>
-
 </body>
-
 </html>
+
 
 <!-- 
     fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {

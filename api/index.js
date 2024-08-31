@@ -2,209 +2,275 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const fs = require('fs').promises; // Use promises-based fs
 const path = require('path');
-const multer = require('multer');
+const multer = require("multer");
+const fs = require('fs');
+const { db, bucket } = require('./firebase');
 
-// JSON Data Paths
-const jsonFilePath = path.join(__dirname, '../data/questions.json');
-const scoresFilePath = path.join(__dirname, '../data/scores.json');
-
-// Initializations
 const app = express();
-const upload = multer({ dest: 'uploads/' });
 
 // Middleware Setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({
-  origin: 'https://aurahunt.octphysicsclub.org',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
-}));
+app.use(cors());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
 app.use(express.static(path.join(__dirname, '../public')));
 
-// // Libraries
-// require('dotenv').config()
-// const express = require('express');
-// const cors = require('cors');
-// const bodyParser = require('body-parser');
-// const fs = require('fs');
-// const path = require('path');
-// const multer = require("multer");
+// CORS Configuration
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://aurahunt.octphysicsclub.org');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
-// // JSON Data
-// const jsonFile = require('../data/questions.json');
-// const scoresFile = require('../data/scores.json');
-// // Initializations
-// const app = express();
-
-// // Middleware Setup
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cors());
-// app.set('view engine', 'ejs');
-// app.set('views', path.join(__dirname, '../views'));
-// app.use(express.static(path.join(__dirname, '../public')));
-
-// // CORS Configuration
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'https://aurahunt.octphysicsclub.org');
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   next();
-// });  
-// Pages
-// Client
-// Scoreboard
-app.get('/scoreboard', (req, res) => {
-  const scores = scoresFile.map(team => { return { id: team.id, score: team.score } });
-  res.render('scoreboard', { scores: scores });
-})
-// login
-app.post('/teamlogin', (req, res) => {
-  const team = scoresFile.find(team => team.id === req.body.team);
-  if (team) {
-    if (team.password === req.body.password) {
-      res.status(200).send({ message: 'Team logged in successfully', token: team.token });
-    } else {
-      res.status(200).send({ message: 'Wrong password' });
-    }
-  } else {
-    res.status(404).send({ message: 'Team not found' });
-  }
-})
-
-// Image "/upload" endpoint
-
-
-
-
-
-// Centralized Error Handling
-const handleError = (err, res) => {
-  console.error(err);
-  res.status(500).json({ message: 'Server Error' });
+// Helper Function to Retrieve Team Document
+const getTeam = async (teamId) => {
+  const teamRef = db.collection('scores').doc(teamId);
+  const teamDoc = await teamRef.get();
+  return teamDoc.exists ? teamDoc : null;
 };
 
-// Routes
+// Helper Function to Retrieve Game Document
+const getGame = async (gameName) => {
+  const gameRef = db.collection('questions').where('name', '==', gameName);
+  const gameSnapshot = await gameRef.get();
+  return !gameSnapshot.empty ? gameSnapshot.docs[0] : null;
+};
+
+// Helper Function to Update Document
+const updateDocument = async (ref, data) => {
+  await ref.update(data);
+};
+
+// Scoreboard Endpoint
 app.get('/scoreboard', async (req, res) => {
   try {
-    const scoresFile = JSON.parse(await fs.readFile(scoresFilePath, 'utf8'));
-    const scores = scoresFile.map(team => ({ id: team.id, score: team.score }));
-    res.render('scoreboard', { scores });
+    const scoresSnapshot = await db.collection('scores').get();
+    const scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, score: doc.data().score }));
+    res.render('scoreboard', { scores: scores });
   } catch (err) {
-    handleError(err, res);
+    res.status(500).send('Error retrieving scores');
   }
 });
 
+
+app.get('/score/:id', async (req, res) => {
+  try {
+    const scoreDoc = await db.collection('scores').doc(req.params.id).get();
+
+    if (!scoreDoc.exists) {
+      return res.status(404).send({ message: 'Score not found' });
+    }
+
+    const score = scoreDoc.data();
+    if (!Array.isArray(score.questions)) {
+      score.questions = []; // or some default value
+    }
+
+    res.render("team", { score: { id: scoreDoc.id, ...score } });
+  } catch (error) {
+    console.error('Error fetching score:', error);
+    res.status(500).send({ message: 'Internal server error', error: error.message });
+  }
+});
+
+
+
+app.post('/editscore', async (req, res) => {
+  try {
+    if (req.body.token !== process.env.ADMIN_REQUEST_TOKEN) {
+      return res.status(403).send("Wrong Token");
+    }
+
+    const teamRef = db.collection('scores').doc(req.body.id);
+    const teamDoc = await teamRef.get();
+
+    if (!teamDoc.exists) {
+      return res.status(404).send({ message: 'Team not found' });
+    }
+
+    const teamData = teamDoc.data();
+    const updatedScore = teamData.score + Number(req.body.aura);
+
+    await teamRef.update({ score: updatedScore });
+
+    res.status(200).json({ message: "Score updated successfully" });
+  } catch (error) {
+    console.error('Error updating score:', error);
+    res.status(500).json({ message: 'Failed to update scores', error: error.message });
+  }
+});
+
+app.post('/toggleChecked', async (req, res) => {
+  try {
+    if (req.body.token !== process.env.ADMIN_REQUEST_TOKEN) {
+      return res.status(403).send("Wrong Token");
+    }
+
+    const teamRef = db.collection('scores').doc(req.body.id);
+    const teamDoc = await teamRef.get();
+
+    if (!teamDoc.exists) {
+      return res.status(404).send({ message: 'Team not found' });
+    }
+
+    const teamData = teamDoc.data();
+    const questions = teamData.questions || [];
+
+    const questionIndex = questions.findIndex(q => q.id === req.body.questionId);
+    if (questionIndex === -1) {
+      return res.status(404).send({ message: 'Question not found' });
+    }
+
+    questions[questionIndex].checked = !questions[questionIndex].checked;
+
+    await teamRef.update({ questions });
+
+    res.status(200).json({ message: "Checked status updated successfully" });
+  } catch (error) {
+    console.error('Error toggling checked status:', error);
+    res.status(500).json({ message: 'Failed to toggle checked status', error: error.message });
+  }
+});
+
+
+
+
+// Login Endpoint
 app.post('/teamlogin', async (req, res) => {
   try {
-    const scoresFile = JSON.parse(await fs.readFile(scoresFilePath, 'utf8'));
-    const team = scoresFile.find(team => team.id === req.body.team);
-    if (team) {
-      if (team.password === req.body.password) {
-        res.status(200).send({ message: 'Team logged in successfully', token: team.token });
-      } else {
-        res.status(200).send({ message: 'Wrong password' });
-      }
+    const teamDoc = await getTeam(req.body.team);
+    if (teamDoc && teamDoc.data().password === req.body.password) {
+      res.status(200).send({ message: 'Team logged in successfully', token: teamDoc.data().token });
     } else {
-      res.status(404).send({ message: 'Team not found' });
+      res.status(200).send({ message: teamDoc ? 'Wrong password' : 'Team not found' });
     }
   } catch (err) {
-    handleError(err, res);
+    res.status(500).send('Error logging in');
   }
 });
 
+// Multer setup for handling multipart/form-data
+const upload = multer({
+  storage: multer.memoryStorage() // Use memory storage to avoid saving files locally
+});
+
+// Image Upload Endpoint
 app.post('/upload', upload.single('file'), async (req, res) => {
+  const { teamid, teamtoken, gamename } = req.body;
+
   try {
-    const teamId = req.body.teamid;
-    const teamToken = req.body.teamtoken;
-    const gameName = req.body.gamename;
-
-    const [scoresFile, jsonFile] = await Promise.all([
-      fs.readFile(scoresFilePath, 'utf8').then(JSON.parse),
-      fs.readFile(jsonFilePath, 'utf8').then(JSON.parse)
-    ]);
-
-    const team = scoresFile.find(team => team.id === teamId);
-    if (team && team.token === teamToken) {
-      const tempPath = req.file.path;
-      const imagePath = path.join(__dirname, '../uploads', `${teamId}_${gameName}_${Date.now()}.png`);
-
-      await fs.rename(tempPath, imagePath);
-
-      const game = jsonFile.find(question => question.name === req.body.gamename);
-      const question = team.questions.find(q => q.id === game.id);
-
-      if (question) {
-        question.checked = false;
-        question.attempts.push(imagePath);
-
-        await fs.writeFile(scoresFilePath, JSON.stringify(scoresFile, null, 2));
-
-        res.status(200).contentType('text/plain').end('File uploaded!');
-      } else {
-        res.status(500).json({ message: 'Question not found' });
+    const teamDoc = await getTeam(teamid);
+    if (teamDoc && teamDoc.data().token === teamtoken) {
+      const file = req.file;
+      if (!file) {
+        return res.status(400).json({ message: 'No file uploaded' });
       }
+
+      const newFileName = `${teamid}/${gamename}/${Date.now()}.png`;
+      const fileUpload = bucket.file(newFileName);
+      const stream = fileUpload.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+
+      stream.on('error', (err) => {
+        console.error('Upload error:', err);
+        res.status(500).json({ message: 'Failed to upload file' });
+      });
+
+      stream.on('finish', async () => {
+        try {
+          const publicUrl = `https://storage.googleapis.com/${bucket.name}/${newFileName}`;
+
+          const gameDoc = await getGame(gamename);
+          if (gameDoc) {
+            console.log(gameDoc.id.toString());
+
+            const questionRef = db.collection('scores').doc(teamid).collection('questions').doc(gameDoc.id.toString());
+            const questionDoc = await questionRef.get();
+
+            console.log(questionDoc.data());
+            if (questionDoc.exists) {
+              const question = questionDoc.data();
+              question.checked = false;
+              question.attempts = question.attempts || [];
+              question.attempts.push(publicUrl);
+              await updateDocument(questionRef, question);
+              res.status(200).json({ message: 'File uploaded successfully!' });
+            } else {
+              res.status(404).json({ message: 'Question not found' });
+            }
+          } else {
+            res.status(404).json({ message: 'Game not found' });
+          }
+        } catch (err) {
+          console.error('Error updating document:', err);
+          res.status(500).json({ message: 'Failed to update document' });
+        }
+      });
+
+      stream.end(file.buffer);
     } else {
-      res.status(200).send({ message: "Please Login Again!" });
+      res.status(403).json({ message: 'Invalid credentials' });
     }
   } catch (err) {
-    handleError(err, res);
+    console.error('Error processing request:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
 
-
-// All Games End point
-app.get('/games', (req, res) => {
-  const games = jsonFile.map(game => `<li><a href="/game/${game.name}">${game.name}</a></li>`);
-  res.send(`<!DOCTYPE html><html><body><h1>Game List</h1><ul>${games.join('')}</ul></body></html>`);
-});
-
-// Detaild Scoreboard End point
-app.get('/adminEditScore', (req, res) => {
-  // const scores = scoresFile.find(team => +team.id == req.params.id);
-  res.render("detailedScoreboard", { scores: scoresFile })
-  // res.send({ message: "not found", data: req.params.id })
-});
+// Helper Function to Handle Errors
+function handleError(err, res) {
+  console.error(err);
+  res.status(500).send({ message: 'Server Error' });
+}
 
 // Route to Submit an Answer
-app.post('/answer', (req, res) => {
+app.post('/answer', async (req, res) => {
   const { teamId, gameId, answer } = req.body;
   try {
-    const game = jsonFile.find(game => game.id === parseInt(gameId));
-    if (!game) {
+    const gameDoc = await db.collection('questions').doc(gameId.toString()).get();
+    if (!gameDoc.exists) {
       return res.status(404).send('Game not found');
     }
-    const team = scoresFile.find(team => team.id === teamId);
-    if (!team) {
+    const game = gameDoc.data();
+
+    const teamDoc = await getTeam(teamId);
+    if (!teamDoc) {
       return res.status(404).send('Team not found');
     }
-    const question = team.questions.find(question => question.id === gameId);
+    const team = teamDoc.data();
+
+    const questionRef = teamDoc.ref.collection('questions').doc(gameId.toString());
+    const questionDoc = await questionRef.get();
+    const question = questionDoc.data();
+
     if (!question || question.solved) {
       return res.status(200).json({ message: 'Already Solved' });
     }
-    game.attempts = game.attempts === "Infinity" ? Infinity : game.attempts;
     if (question.attempts.length < game.attempts) {
       question.attempts.push(answer);
       if (game.answer === answer) {
         team.score += game.score;
         question.solved = true;
-        updateScores(scoresFile, res, 'Correct');
+        await updateDocument(questionRef, question);
+        await updateDocument(teamDoc.ref, team);
+        res.status(200).json({ message: 'Correct' });
       } else {
         if (game.deduction) {
           team.score -= game.deduction;
         }
-        question.attempts += 1;
-        updateScores(scoresFile, res, 'Wrong Answer', 501, { rAttempts: game.attempts - question.attempts.length });
+        await updateDocument(teamDoc.ref, team);
+        await updateDocument(questionRef, question);
+        res.status(501).json({ message: 'Wrong Answer', rAttempts: game.attempts - question.attempts.length });
       }
     } else {
       res.status(200).json({ message: 'No more attempts', rAttempts: game.attempts - question.attempts.length });
     }
-
   } catch (error) {
     console.error('Error processing answer:', error);
     res.status(500).send('Internal server error');
@@ -213,129 +279,125 @@ app.post('/answer', (req, res) => {
 
 
 
-// Route to toggle checked
-app.post('/toggleChecked', (req, res) => {
+
+app.get('/adminEditScore', async (req, res) => {
+  try {
+    // Fetch the scores data from Firestore
+    const scoresSnapshot = await db.collection('scores').get();
+    if (scoresSnapshot.empty) {
+      return res.status(404).render("detailedScoreboard", { scores: [], message: "No scores found" });
+    }
+
+    // Transform Firestore documents into an array
+    const scores = scoresSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        questions: Array.isArray(data.questions) ? data.questions : [], // Ensure questions is an array
+        score: data.score || 0 // Ensure score is defined
+      };
+    });
+
+    // Render the detailedScoreboard view with the scores data
+    res.render("detailedScoreboard", { scores });
+  } catch (error) {
+    console.error('Error fetching scores:', error);
+    res.status(500).send({ message: 'Internal server error', error: error.message });
+  }
+});
+
+
+
+
+
+
+// Route to Toggle Checked Status
+app.post('/toggleChecked', async (req, res) => {
   const { id, questionId } = req.body;
   try {
-    const team = scoresFile.find(team => team.id === id);
-    if (!team) {
+    const teamDoc = await getTeam(id);
+    if (!teamDoc) {
       return res.status(404).send('Team not found');
     }
-    const question = team.questions.find(question => question.id == questionId);
-    console.log(id, questionId);
+    const questionRef = teamDoc.ref.collection('questions').doc(questionId.toString());
+    const questionDoc = await questionRef.get();
+    const question = questionDoc.data();
 
     if (!question || question.solved) {
       return res.status(200).json({ message: 'Already Solved' });
     }
     question.checked = true;
-    updateScores(scoresFile, res, 'CHECKED');
+    await updateDocument(questionRef, question);
+    res.status(200).json({ message: 'CHECKED' });
   } catch (error) {
-    console.error('Error processing answer:', error);
+    console.error('Error processing toggleChecked:', error);
     res.status(500).send('Internal server error');
   }
 });
-// Route to give bonus for answers
-app.post('/correctQuestion', (req, res) => {
+
+// Route to Give Bonus for Answers
+app.post('/correctQuestion', async (req, res) => {
   const { teamId, gameId, correct } = req.body;
   try {
-    const game = jsonFile.find(game => game.id === parseInt(gameId));
-    if (!game) {
+    const gameDoc = await db.collection('questions').doc(gameId.toString()).get();
+    if (!gameDoc.exists) {
       return res.status(404).send('Game not found');
     }
-    const team = scoresFile.find(team => team.id === teamId);
-    if (!team) {
+    const game = gameDoc.data();
+    const teamDoc = await getTeam(teamId);
+    if (!teamDoc) {
       return res.status(404).send('Team not found');
     }
-    const question = team.questions.find(question => question.id === gameId);
+    const team = teamDoc.data();
+
+    const questionRef = teamDoc.ref.collection('questions').doc(gameId.toString());
+    const questionDoc = await questionRef.get();
+    const question = questionDoc.data();
+
     if (!question || question.solved) {
       return res.status(200).json({ message: 'Already Solved' });
     }
     question.checked = true;
     if (correct) {
-
-      question.solved = correct;
-      team.score += game.score
+      question.solved = true;
+      team.score += game.score;
     } else {
-      team.score -= game.deduction
+      team.score -= game.deduction;
     }
-    updateScores(scoresFile, res, 'CHECKED');
+    await updateDocument(questionRef, question);
+    await updateDocument(teamDoc.ref, team);
+    res.status(200).json({ message: 'CHECKED' });
   } catch (error) {
-    console.error('Error processing answer:', error);
+    console.error('Error processing correctQuestion:', error);
     res.status(500).send('Internal server error');
   }
 });
 
-
-
-// // Route to Get Specific Game's Question by ID
-// app.get('/question/:id', (req, res) => {
-//   const gameId = parseInt(req.params.id);  
-//   try {
-//     const game = jsonFile.find(game => game.id === gameId);  
-//     if (!game) {
-//       res.status(404).send('Game not found');  
-//     } else {
-//       res.send(game);  
-//     }
-//   } catch (error) {
-//     console.error('Error reading JSON file:', error);  
-//     res.status(500).send('Error reading JSON file');
-// }
-// });
-
-app.get('/score/:id', (req, res) => {
-  const scores = scoresFile.find(team => +team.id == req.params.id);
-  console.log();
-
-  res.render("team", { score: scores })
-});
-app.post('/editscore', (req, res) => {
-  const team = scoresFile.find(team => +team.id == req.body.id);
-  if (req.body.token === process.env.ADMIN_REQUEST_TOKEN) {
-    console.log(team);
-    team.score += Number(req.body.aura);
-    fs.writeFile('./data/scores.json', JSON.stringify(scoresFile, null, 2), err => {
-      if (err) {
-        console.error('Error writing to scores.json:', err);
-        res.status(500).json({ message: 'Failed to update scores' });
-      } else {
-        res.status(200).json({ message: "score added succefully" });
-      }
-    });
-  } else {
-    res.status(500).send("Wrong Token")
-  }
-});
-
-
-// Helper function to update scores
-const updateScores = (scoresFile, res, message, status = 200, extra = {}) => {
-  fs.writeFile('./data/scores.json', JSON.stringify(scoresFile, null, 2), err => {
-    if (err) {
-      console.error('Error writing to scores.json:', err);
-      res.status(500).json({ message: 'Failed to update scores' });
-    } else {
-      res.status(status).json({ message, ...extra });
-    }
-  });
-};
-
-// Route to Render a Specific Game Page by ID
-app.get('/game/:id', (req, res) => {
+// Route to Get Specific Game's Question by ID
+app.get('/game/:id', async (req, res) => {
   const gameName = req.params.id;
-  const selectedGame = jsonFile.find(game => game.name === gameName);
-  if (selectedGame) {
-    console.log(selectedGame);
-    res.render('index', selectedGame);
-  } else {
-    res.status(404).send('Not found');
+  try {
+    const gameDoc = await getGame(gameName);
+    if (!gameDoc) {
+      return res.status(404).send('Not found');
+    }
+    res.render('index', gameDoc.data());
+  } catch (error) {
+    console.error('Error retrieving game:', error);
+    res.status(500).send('Internal server error');
   }
 });
 
-app.get('/instructions', (req, res) => {
-  const scores = scoresFile.map(team => { return { id: team.id, score: team.score } });
-  res.render('instructions', { scores: scores });
-})
+// Route to Render Instructions Page
+app.get('/instructions', async (req, res) => {
+  try {
+    const scoresSnapshot = await db.collection('scores').get();
+    const scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, score: doc.data().score }));
+    res.render('instructions', { scores: scores });
+  } catch (err) {
+    res.status(500).send('Error retrieving instructions');
+  }
+});
 
 // Catch-all route for undefined paths
 app.get('*', (req, res) => {
@@ -347,4 +409,5 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
+
 module.exports = app;
