@@ -300,29 +300,7 @@
   {
     "id": "102",
     "token": "spge02m3-xri23xr34=mcgti3prgcn23xfm302g4h3cn-94xm3",
-    "password": "STEM_October",
-    "questions": [
-      {
-        "id": 0,
-        "attempts": 13,
-        "solved": false
-      },
-      {
-        "id": 1,
-        "attempts": 10,
-        "solved": true
-      },
-      {
-        "id": 2,
-        "attempts": 13,
-        "solved": true
-      },
-      {
-        "id": 3,
-        "attempts": 13,
-        "solved": false
-      }
-    ]
+    "password": "STEM_October"
   },
   {
     "id": "103",
@@ -1136,30 +1114,8 @@
   },
   {
     "id": "213",
-    "score": 21,
     "password": "STEM_October",
-    "questions": [
-      {
-        "id": 0,
-        "attempts": 5,
-        "solved": true
-      },
-      {
-        "id": 1,
-        "attempts": 18,
-        "solved": false
-      },
-      {
-        "id": 2,
-        "attempts": 13,
-        "solved": true
-      },
-      {
-        "id": 3,
-        "attempts": 15,
-        "solved": true
-      }
-    ]
+    "token": "fjw0ir2xn9r20r2309rc7230zry239bcry23z9rm23rxb92"
   },
   {
     "id": "214",
