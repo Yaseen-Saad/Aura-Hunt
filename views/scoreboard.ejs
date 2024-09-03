@@ -38,11 +38,11 @@
           <th>Aura</th>
         </tr>
         <%locals.scores.sort((a, b)=> b.score - a.score).forEach((score,i) => {%>
-        <tr id="<%=  score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id%>">
+        <tr id="<%=  score.id.length !=3 ? "0".repeat(2-score.id.length) + score.id: score.id%>">
           <td>
             <%=i+1%>
           </td>
-          <td><%=score.id.length !=3 ? "0".repeat(3-score.id.length) + score.id: score.id%>
+          <td><%=score.id.length !=3 ? "0".repeat(2-score.id.length) + score.id: score.id%>
           </td>
           <td>
             <%=score.score%>

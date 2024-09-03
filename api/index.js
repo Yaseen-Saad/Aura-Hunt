@@ -89,7 +89,6 @@ app.post('/toggleChecked', async (req, res) => {
     await questionRef.update({
       checked: admin.firestore.FieldValue.increment(1)
     });
-    console.log("Updated");
     res.status(200).json({ message: "Checked status updated successfully" });
   } catch (error) {
     console.error('Error toggling checked status:', error);
@@ -248,8 +247,6 @@ app.post('/correctQuestion', async (req, res) => {
 app.get('/game/:id', async (req, res) => {
   const gameName = req.params.id;
   try {
-    console.log(req.params.id);
-
     const gameDoc = await getGame(gameName);
     if (!gameDoc) {
       return res.status(404).send('Not found');
@@ -276,8 +273,6 @@ app.get('/scoreboard', async (req, res) => {
   try {
     const data = await db.collection("scores").get()
     const response = data.docs.map(doc => { return { id: doc.id, ...doc.data() } })
-    console.log(response);
-
     res.render("scoreboard", { scores: response })
   } catch (error) {
 
@@ -289,7 +284,6 @@ app.get('/scoreboard', async (req, res) => {
 const upload = multer({
   storage: multer.memoryStorage() // Use memory storage to avoid saving files locally
 });
-// Image Upload Endpoint
 
 app.post('/upload', upload.single('file'), async (req, res) => {
   const { teamid, teamtoken, gamename, gameId } = req.body;
@@ -322,7 +316,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             expires: Date.now() + 1000 * 60 * 60 * 1000
           });
 
-          const questionRef = db.collection('scores').doc(teamid).collection('questions').doc(gameId);
+          const questionRef = db.collection('scores').doc(Number(teamid).toString()).collection('questions').doc(gameId);
           await questionRef.update({
             checked: false,
             attempts: admin.firestore.FieldValue.arrayUnion(publicUrl[0])
@@ -401,8 +395,7 @@ app.get('/score/:id', async (req, res) => {
 app.get('/supersecretcommandtoresetdb', async (req, res) => {
   for (const team of teams) {
     await db.collection("scores").doc(team.id.toString()).set({ score: 0 })
-    for (const question of questionsData) {      
-      // console.log(question.id);
+    for (const question of questionsData) {
       await db.collection("scores").doc(team.id).collection('questions').doc(question.id.toString()).set({ attempts: [], checked: 0, solved: 0 })
     }
   }

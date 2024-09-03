@@ -106,10 +106,6 @@
             if (result.message === 'Correct') {
               document.querySelector(".modal-content p").innerText = "Watch your aura increasing";
               document.getElementById("modal-toggle").click();
-              setTimeout(() => location.href = "../scoreboard", 2000);
-              document.querySelector("#alert-button").onclick = () => {
-                location.href = "../scoreboard";
-              };
             } else if (result.message === "Wrong Answer") {
               document.querySelector(".modal-content p").innerText = `Wrong Answer,\n Remaining Attempts: ${result.rAttempts}`;
               document.getElementById("modal-toggle").click();
@@ -121,10 +117,6 @@
           .catch(error => {
             document.querySelector(".modal-content p").innerText = error.message;
             document.getElementById("modal-toggle").click();
-            setTimeout(() => location.href = "../scoreboard", 2000);
-            document.querySelector("#alert-button").onclick = () => {
-              location.href = "../scoreboard";
-            };
           });
       });
     </script>
@@ -196,10 +188,7 @@
               if (result.message === 'File uploaded successfully') {
                 document.querySelector(".modal-content p").innerText = "Waiting for Aura Master's review";
                 document.getElementById("modal-toggle").click();
-                setTimeout(() => location.href = "../scoreboard", 2000);
-                document.querySelector("#alert-button").onclick = () => {
-                  location.href = "../scoreboard";
-                };
+               
               } else {
                 throw new Error(result.message);
               }
