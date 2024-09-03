@@ -300,7 +300,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       if (!file) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
-      
+
       const fileExtension = file.originalname.split('.').pop(); // Get the file extension
       const newFileName = `${teamid}/${gamename}/${Date.now()}.${fileExtension}`; // Use the original file extension
       const fileUpload = bucket.file(newFileName);
@@ -309,32 +309,32 @@ app.post('/upload', upload.single('file'), async (req, res) => {
           contentType: file.mimetype, // Use the original MIME type
         },
       });
-  
+
       stream.on('error', (err) => {
         console.error('Upload error:', err);
         res.status(500).json({ message: 'Failed to upload file' });
       });
-  
+
       await stream.on('finish', async () => {
         try {
           const publicUrl = await fileUpload.getSignedUrl({
             action: 'read',
             expires: Date.now() + 1000 * 60 * 60 * 1000
           });
-  
+
           const questionRef = db.collection('scores').doc(teamid).collection('questions').doc(gameId);
           await questionRef.update({
             checked: false,
             attempts: admin.firestore.FieldValue.arrayUnion(publicUrl[0])
           });
-  
+
           res.status(200).json({ message: 'File uploaded successfully', url: publicUrl });
         } catch (err) {
           console.error('Error updating document:', err);
           res.status(500).json({ message: 'Failed to update document' });
         }
       });
-  
+
       stream.end(file.buffer);
     } else {
       res.status(403).json({ message: 'Invalid credentials' });
@@ -343,7 +343,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     console.error('Error processing request:', err);
     res.status(500).json({ message: 'Server error' });
   }
-  
+
 });
 
 
@@ -384,8 +384,6 @@ app.get('/score/:id', async (req, res) => {
       }
     }))
 
-    console.log(scores[0].id);
-
     res.render("team", {
       score: {
         id: req.params.id,
@@ -400,7 +398,15 @@ app.get('/score/:id', async (req, res) => {
 });
 
 
-
+app.get('/supersecretcommandtoresetdb', async (req, res) => {
+  for (const team of teams) {
+    await db.collection("scores").doc(team.id.toString()).set({ score: 0 })
+    for (const question of questionsData) {      
+      // console.log(question.id);
+      await db.collection("scores").doc(team.id).collection('questions').doc(question.id.toString()).set({ attempts: [], checked: 0, solved: 0 })
+    }
+  }
+})
 // Catch-all route for undefined paths
 app.get('*', (req, res) => {
   res.status(404).send('Not found');
