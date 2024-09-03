@@ -92,8 +92,6 @@
           document.getElementById("modal-toggle").click();
           return;
         }
-
-
         fetch('/answer', {
             method: 'POST',
             headers: {
@@ -129,99 +127,91 @@
             };
           });
       });
-
-
-
-      ;
     </script>
     <%}else{ %>
-      <form id="form" method="post" enctype="multipart/form-data">
-        <div>
-          <label class="button-77" for="fileupload">Choose File</label>
-          <span id="fileNameDisplay">No file chosen</span>
-          <input hidden id="fileupload" type="file" name="file" accept=".jpg,.jpeg,.png" required>
-        </div>
-        <input hidden type="text" id="teamidsubmittion" name="teamid">
-        <input hidden type="text" id="teamTokensubmittion" name="teamtoken">
-        <input hidden value="<%=locals.name%>" type="text" id="gamenamesubmittion" name="gamename">
-        <input hidden value="<%=locals.id%>" type="text" id="gameId" name="gameId">
-        <div>
-          <button class="button-77" id="submitrealButton">Submit</button>
-        </div>
-        <input style="display: none;" type="submit" class="button-77" value="Submit" id="submitButton">
-      </form>
-      
-      <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const form = document.getElementById("form");
-          const teamId = document.getElementById("teamidsubmittion");
-          const teamToken = document.getElementById("teamTokensubmittion");
-          const gameName = document.getElementById("gamenamesubmittion");
-          const gameId = document.getElementById("gameId");
-          const fileUpload = document.getElementById("fileupload");
-          const fileNameDisplay = document.getElementById("fileNameDisplay");
-      
-          // Populate fields with data from localStorage
-          teamId.value = localStorage.getItem("teamId") || "";
-          teamToken.value = localStorage.getItem("teamToken") || "";
-      
-          // Update file name display when a file is selected
-          fileUpload.addEventListener("change", () => {
-            fileNameDisplay.innerText = fileUpload.files[0] ? fileUpload.files[0].name : "No file chosen";
-          });
-      
-          document.getElementById("submitrealButton").addEventListener("click", () => {
-            if (!fileUpload.files[0]) {
-              document.querySelector(".modal-content p").innerText = "Please Enter Your File";
-              document.getElementById("modal-toggle").click();              return;
-            }
-            document.getElementById("submitButton").click();
-          });
-      
-          form.addEventListener("submit", event => {
-            event.preventDefault(); // Prevent the default form submission
-      
-            // Validate form data
-            if (!gameId.value || !teamId.value || !teamToken.value || !gameName.value) {
-              document.querySelector(".modal-content p").innerText = "Please Log in Again";
-              document.getElementById("modal-toggle").click();
-              setTimeout(() => location.href = "../", 2000);
-              document.querySelector("#alert-button").onclick = () => {
-                location.href = "../";
-              };
-              return;
-            }
-      
-            // Create a FormData object from the form
-            const formData = new FormData(form);
-      
-            // Use fetch to submit the form data via AJAX
-            fetch('/upload', {
-                method: 'POST',
-                body: formData,
-              })
-              .then(response => response.json())
-              .then(result => {
-                if (result.message === 'File uploaded successfully') {
-                  document.querySelector(".modal-content p").innerText = "Waiting for Aura Master's review";
-                  document.getElementById("modal-toggle").click();
-                  setTimeout(() => location.href = "../scoreboard", 2000);
-                  document.querySelector("#alert-button").onclick = () => {
-                    location.href = "../scoreboard";
-                  };
-                } else {
-                  throw new Error(result.message);
-                }
-              })
-              .catch(error => {
-                // Handle errors
-                console.error('Error uploading file:', error);
-                alert('Error uploading file!');
-              });
-          });
+    <form id="form" method="post" enctype="multipart/form-data">
+      <div>
+        <label class="button-77" for="fileupload">Choose File</label>
+        <span id="fileNameDisplay">No file chosen</span>
+        <input hidden id="fileupload" type="file" name="file" accept=".jpg,.jpeg,.png" required>
+      </div>
+      <input hidden type="text" id="teamidsubmittion" name="teamid">
+      <input hidden type="text" id="teamTokensubmittion" name="teamtoken">
+      <input hidden value="<%=locals.name%>" type="text" id="gamenamesubmittion" name="gamename">
+      <input hidden value="<%=locals.id%>" type="text" id="gameId" name="gameId">
+      <div>
+        <button class="button-77" id="submitrealButton">Submit</button>
+      </div>
+      <input style="display: none;" type="submit" class="button-77" value="Submit" id="submitButton">
+    </form>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("form");
+        const teamId = document.getElementById("teamidsubmittion");
+        const teamToken = document.getElementById("teamTokensubmittion");
+        const gameName = document.getElementById("gamenamesubmittion");
+        const gameId = document.getElementById("gameId");
+        const fileUpload = document.getElementById("fileupload");
+        const fileNameDisplay = document.getElementById("fileNameDisplay");
+
+        // Populate fields with data from localStorage
+        teamId.value = localStorage.getItem("teamId") || "";
+        teamToken.value = localStorage.getItem("teamToken") || "";
+
+        // Update file name display when a file is selected
+        fileUpload.addEventListener("change", () => {
+          fileNameDisplay.innerText = fileUpload.files[0] ? fileUpload.files[0].name : "No file chosen";
         });
-      </script>
-      
+
+        document.getElementById("submitrealButton").addEventListener("click", () => {
+          if (!fileUpload.files[0]) {
+            document.querySelector(".modal-content p").innerText = "Please Enter Your File";
+            document.getElementById("modal-toggle").click();
+            return;
+          } else {
+            document.getElementById("submitButton").click();
+          }
+        });
+
+        form.addEventListener("submit", event => {
+          event.preventDefault(); // Prevent the default form submission
+          // Validate form data
+          if (!gameId.value || !teamId.value || !teamToken.value || !gameName.value) {
+            document.querySelector(".modal-content p").innerText = "Please Log in Again";
+            document.getElementById("modal-toggle").click();
+            setTimeout(() => location.href = "../", 2000);
+            document.querySelector("#alert-button").onclick = () => {
+              location.href = "../";
+            };
+            return;
+          }
+          const formData = new FormData(form);
+          fetch('/upload', {
+              method: 'POST',
+              body: formData,
+            })
+            .then(response => response.json())
+            .then(result => {
+              if (result.message === 'File uploaded successfully') {
+                document.querySelector(".modal-content p").innerText = "Waiting for Aura Master's review";
+                document.getElementById("modal-toggle").click();
+                setTimeout(() => location.href = "../scoreboard", 2000);
+                document.querySelector("#alert-button").onclick = () => {
+                  location.href = "../scoreboard";
+                };
+              } else {
+                throw new Error(result.message);
+              }
+            })
+            .catch(error => {
+              console.error('Error uploading file:', error);
+              alert('Error uploading file!');
+            });
+        });
+      });
+    </script>
+
     <% } %>
   </main>
   <footer>
