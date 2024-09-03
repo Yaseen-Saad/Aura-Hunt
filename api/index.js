@@ -5,8 +5,10 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const multer = require("multer");
 const fs = require('fs');
-const { db, bucket } = require('./firebase');
+const { db, bucket, } = require('./firebase');
 const admin = require('firebase-admin');
+// const {increment} = require('firebase/firestore');
+const { log } = require('console');
 
 const app = express();
 
@@ -36,48 +38,16 @@ const getTeam = async (teamId) => {
 
 // Helper Function to Retrieve Game Document
 const getGame = async (gameName) => {
-  console.log(questionsData);
-
   return questionsData.find(game => game.name === gameName) || null;
+};
+const getGameById = async (gameId) => {
+  return questionsData.find(game => game.id == gameId) || null;
 };
 
 // Helper Function to Update Document
 const updateDocument = async (ref, data) => {
   await ref.update(data);
 };
-
-// Scoreboard Endpoint
-app.get('/scoreboard', async (req, res) => {
-  try {
-    const scoresSnapshot = await db.collection('scores').get();
-    const scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, score: doc.data().score }));
-    res.render('scoreboard', { scores: scores });
-  } catch (err) {
-    res.status(500).send('Error retrieving scores');
-  }
-});
-
-app.get('/score/:id', async (req, res) => {
-  try {
-    const scoreDoc = await db.collection('scores').doc(req.params.id).get();
-    if (!scoreDoc.exists) {
-      return res.status(404).send({ message: 'Score not found' });
-    }
-    const scoreData = scoreDoc.data();
-    const questions = await scoreDoc.ref.collection('questions').get();
-
-    if (!questions.docs.length) {
-      return res.status(404).send({ message: 'No questions found' });
-    }
-    const scores = questions.docs.map((question) => { return { id: question.id, ...question.data() } });
-    console.log({ score: { id: req.params.id, score: scoreData.score, questions: scores } }.score.questions);
-    res.render("team", { score: { id: req.params.id, score: scoreData.score, questions: scores } });
-  } catch (error) {
-    console.error('Error fetching score:', error);
-    res.status(500).send({ message: 'Internal server error', error: error.message });
-  }
-});
-
 
 
 app.post('/editscore', async (req, res) => {
@@ -112,23 +82,14 @@ app.post('/toggleChecked', async (req, res) => {
     if (token !== process.env.ADMIN_REQUEST_TOKEN) {
       return res.status(403).send("Wrong Token");
     }
-    const teamRef = db.collection('scores').doc(id);
-    const teamDoc = await teamRef.get();
-    if (!teamDoc.exists) {
-      return res.status(404).send({ message: 'Team not found' });
-    }
-    const teamData = teamDoc.data();
-    const questionRef = teamData.ref.collection('questions').doc(questionId.toString());
-    const questionDoc = await questionRef.get();
-    const question = questionDoc.data();
-    if (!question) {
+    const questionRef = db.collection('scores').doc(id).collection('questions').doc(questionId.toString());
+    if (!questionRef) {
       return res.status(404).send({ message: 'Question not found' });
     }
-    if (question.solved) {
-      return res.status(200).json({ message: 'Already Solved' });
-    }
-    question.checked = !question.checked;
-    await updateDocument(questionRef, question);
+    await questionRef.update({
+      checked: admin.firestore.FieldValue.increment(1)
+    });
+    console.log("Updated");
     res.status(200).json({ message: "Checked status updated successfully" });
   } catch (error) {
     console.error('Error toggling checked status:', error);
@@ -136,160 +97,80 @@ app.post('/toggleChecked', async (req, res) => {
   }
 });
 
-
-
-// Login Endpoint
-app.post('/teamlogin', async (req, res) => {
+app.post('/toggleSolved', async (req, res) => {
+  const { id, questionId, token } = req.body;
   try {
-    const team = await getTeam(req.body.team)
-    if (team && team.password === req.body.password) {
-      res.status(200).send({ message: 'Team logged in successfully', token: team.token });
-    } else {
-      res.status(200).send({ message: team ? 'Wrong password' : 'Team not found' });
+    if (token !== process.env.ADMIN_REQUEST_TOKEN) {
+      return res.status(403).send("Wrong Token");
     }
-  } catch (err) {
-    res.status(500).send('Error logging in');
+    const questionRef = db.collection('scores').doc(id).collection('questions').doc(questionId.toString());
+    if (!questionRef) {
+      return res.status(404).send({ message: 'Question not found' });
+    }
+    await questionRef.update({
+      solved: admin.firestore.FieldValue.increment(1)
+    });
+    res.status(200).json({ message: "solved status updated successfully" });
+  } catch (error) {
+    console.error('Error toggling solved status:', error);
+    res.status(500).json({ message: 'Failed to toggle solved status', error: error.message });
   }
 });
-
-// Multer setup for handling multipart/form-data
-const upload = multer({
-  storage: multer.memoryStorage() // Use memory storage to avoid saving files locally
-});
-
-
-// Image Upload Endpoint
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.post('/upload', upload.single('file'), async (req, res) => {
-  const { teamid, teamtoken, gamename, gameId } = req.body;
-  try {
-    const team = await getTeam(teamid);
-    if (team && team.token === teamtoken) {
-      const file = req.file;
-      if (!file) {
-        return res.status(400).json({ message: 'No file uploaded' });
-      }
-      const newFileName = `${teamid}/${gamename}/${Date.now()}.png`;
-      const fileUpload = bucket.file(newFileName);
-      const stream = fileUpload.createWriteStream({
-        metadata: {
-          contentType: file.mimetype,
-        },
-      });
-      stream.on('error', (err) => {
-        console.error('Upload error:', err);
-        res.status(500).json({ message: 'Failed to upload file' });
-      })
-      await stream.on('finish', async () => {
-        try {
-          console.log(req.file)
-          const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${req.body.teamid}.appspot.com/o/${req.body.gamename}/${req.file.originalname}?alt=media&token=${req.file.token}`;
-          const questionRef = db.collection('scores').doc(teamid).collection('questions').doc(gameId);
-          await questionRef.update({
-            checked: false,
-            attempts: admin.firestore.FieldValue.arrayUnion(publicUrl)
-
-          });
-          res.status(200).json({ message: 'File uploaded successfully', url: publicUrl });
-        } catch (err) {
-          console.error('Error updating document:', err);
-          res.status(500).json({ message: 'Failed to update document' });
-        }
-      });
-      stream.end(file.buffer);
-    } else {
-      res.status(403).json({ message: 'Invalid credentials' });
-    }
-  } catch (err) {
-    console.error('Error processing request:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 // Route to Submit an Answer
-// app.post('/answer', async (req, res) => {
-//   const { teamId, gameId, answer } = req.body;
-//   try {
-//     const gameDoc = await db.collection('questions').doc(gameId.toString()).get();
-//     if (!gameDoc.exists) {
-//       return res.status(404).send('Game not found');
-//     }
-//     const game = gameDoc.data();
-
-//     const teamDoc = await getTeam(teamId);
-//     if (!teamDoc) {
-//       return res.status(404).send('Team not found');
-//     }
-//     const team = teamDoc.data();
-
-//     const questionRef = teamDoc.ref.collection('questions').doc(gameId.toString());
-//     const questionDoc = await questionRef.get();
-//     const question = questionDoc.data();
-
-//     if (!question || question.solved) {
-//       return res.status(200).json({ message: 'Already Solved' });
-//     }
-//     if (question.attempts.length < game.attempts) {
-//       question.attempts.push(answer);
-//       if (game.answer === answer) {
-//         team.score += game.score;
-//         question.solved = true;
-//         await updateDocument(questionRef, question);
-//         await updateDocument(teamDoc.ref, team);
-//         res.status(200).json({ message: 'Correct' });
-//       } else {
-//         if (game.deduction) {
-//           team.score -= game.deduction;
-//         }
-//         await updateDocument(teamDoc.ref, team);
-//         await updateDocument(questionRef, question);
-//         res.status(501).json({ message: 'Wrong Answer', rAttempts: game.attempts - question.attempts.length });
-//       }
-//     } else {
-//       res.status(200).json({ message: 'No more attempts', rAttempts: game.attempts - question.attempts.length });
-//     }
-//   } catch (error) {
-//     console.error('Error processing answer:', error);
-//     res.status(500).send('Internal server error');
-//   }
-// });
+app.post('/answer', async (req, res) => {
+  const { teamId, gameId, answer, teamToken, gamename } = req.body;
+  const team = await getTeam(teamId);
+  if (team && team.token === teamToken) {
+    try {
+      const gameDoc = await getGameById(gameId);
+      if (!gameDoc) {
+        return res.status(404).send('Game not found');
+      }
+      const questionRef = db.collection('scores').doc(teamId).collection('questions').doc(gameId.toString());
+      const questionDoc = await questionRef.get();
+      const question = questionDoc.data();
+      if (!question || question.solved) {
+        return res.status(200).json({ message: 'Already Solved' });
+      }
+      if (question.attempts.length < gameDoc.attempts) {
+        question.attempts.push(answer);
+        if (gameDoc.answer === answer) {
+          await db.collection('scores').doc(teamId.toString()).update({
+            checked: false,
+            attempts: admin.firestore.FieldValue.arrayUnion(answer),
+            score: admin.firestore.FieldValue.increment(gameDoc.score),
+            solved: true
+          })
+          res.status(200).json({ message: 'Correct' });
+        } else {
+          if (gameDoc.deduction) {
+            const updateData = {
+              score: admin.firestore.FieldValue.increment(-gameDoc.deduction),
+              questions: {
+                $each: questions.docs.map((question) => ({
+                  checked: false,
+                  attempts: admin.firestore.FieldValue.arrayUnion(answer)
+                })),
+                $set: {}
+              }
+            };
+            
+            await db.collection('scores').doc(teamId.toString()).update(updateData);
+          }
+          res.status(501).json({ message: 'Wrong Answer', rAttempts: gameDoc.attempts - question.attempts.length });
+        }
+      } else {
+        res.status(200).json({ message: 'No more attempts', rAttempts: gameDoc.attempts - question.attempts.length });
+      }
+    } catch (error) {
+      console.error('Error processing answer:', error);
+      res.status(500).send('Internal server error');
+    }
+  }
+});
 
 app.get('/adminEditScore', async (req, res) => {
   try {
@@ -362,8 +243,9 @@ app.post('/correctQuestion', async (req, res) => {
 // Route to Get Specific Game's Question by ID
 app.get('/game/:id', async (req, res) => {
   const gameName = req.params.id;
-  const gameId = req.query.gameId; // Get the name parameter
   try {
+    console.log(req.params.id);
+
     const gameDoc = await getGame(gameName);
     if (!gameDoc) {
       return res.status(404).send('Not found');
@@ -377,13 +259,136 @@ app.get('/game/:id', async (req, res) => {
 // Route to Render Instructions Page
 app.get('/instructions', async (req, res) => {
   try {
-    const scoresSnapshot = await db.collection('scores').get();
-    const scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, score: doc.data().score }));
-    res.render('instructions', { scores: scores });
+    res.render('instructions');
   } catch (err) {
     res.status(500).send('Error retrieving instructions');
   }
 });
+
+
+
+// Login Endpoint
+app.get('/scoreboard', async (req, res) => {
+  try {
+    const data = await db.collection("scores").get()
+    const response = data.docs.map(doc => { return { id: doc.id, ...doc.data() } })
+    console.log(response);
+
+    res.render("scoreboard", { scores: response })
+  } catch (error) {
+
+  }
+});
+
+
+// Multer setup for handling multipart/form-data
+const upload = multer({
+  storage: multer.memoryStorage() // Use memory storage to avoid saving files locally
+});
+// Image Upload Endpoint
+
+app.post('/upload', upload.single('file'), async (req, res) => {
+  const { teamid, teamtoken, gamename, gameId } = req.body;
+  try {
+    const team = await getTeam(teamid);
+    if (team && team.token === teamtoken) {
+      const file = req.file;
+      if (!file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+      const newFileName = `${teamid}/${gamename}/${Date.now()}.png`;
+      const fileUpload = bucket.file(newFileName);
+      const stream = fileUpload.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+      stream.on('error', (err) => {
+        console.error('Upload error:', err);
+        res.status(500).json({ message: 'Failed to upload file' });
+      })
+      await stream.on('finish', async () => {
+        try {
+
+          const publicUrl = await fileUpload.getSignedUrl({
+            action: 'read',
+            expires: Date.now() + 1000 * 60 * 60 * 1000
+          });
+          const questionRef = db.collection('scores').doc(teamid).collection('questions').doc(gameId);
+          await questionRef.update({
+            checked: false,
+            attempts: admin.firestore.FieldValue.arrayUnion(publicUrl[0])
+          });
+          res.status(200).json({ message: 'File uploaded successfully', url: publicUrl });
+        } catch (err) {
+          console.error('Error updating document:', err);
+          res.status(500).json({ message: 'Failed to update document' });
+        }
+      });
+      stream.end(file.buffer);
+    } else {
+      res.status(403).json({ message: 'Invalid credentials' });
+    }
+  } catch (err) {
+    console.error('Error processing request:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+// Login Endpoint
+app.post('/teamlogin', async (req, res) => {
+  try {
+    const team = await getTeam(req.body.team)
+    if (team && team.password === req.body.password) {
+      res.status(200).send({ message: 'Team logged in successfully', token: team.token });
+    } else {
+      res.status(200).send({ message: team ? 'Wrong password' : 'Team not found' });
+    }
+  } catch (err) {
+    res.status(500).send('Error logging in');
+  }
+});
+
+
+app.get('/score/:id', async (req, res) => {
+  try {
+    const scoreDoc = await db.collection('scores').doc(req.params.id).get();
+    if (!scoreDoc.exists) {
+      return res.status(404).send({ message: 'Score not found' });
+    }
+    const scoreData = scoreDoc.data();
+    const questions = await scoreDoc.ref.collection('questions').get();
+    if (!questions.docs.length) {
+      return res.status(404).send({ message: 'No questions found' });
+    }
+    const scores = await Promise.all(questions.docs.map(async (question) => {
+      const game = await getGameById(question.id)
+      return {
+        id: question.id,
+        score: game.score,
+        deduction: game.deduction,
+        ...question.data()
+      }
+    }))
+
+    console.log(scores[0].id);
+
+    res.render("team", {
+      score: {
+        id: req.params.id,
+        score: scoreData.score,
+        questions: scores
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching score:', error);
+    res.status(500).send({ message: 'Internal server error', error: error.message });
+  }
+});
+
+
 
 // Catch-all route for undefined paths
 app.get('*', (req, res) => {

@@ -39,39 +39,42 @@
       <table>
         <tr>
           <th>Question</th>
-          <th>Attempts Count</th>
           <th>Attempts</th>
+          <th>Score</th>
+          <th>Deduction</th>
           <th>Checked</th>
           <th>Solved</th>
         </tr>
         <% if (Array.isArray(score.questions)) { %>
-          <% score.questions.sort((a, b) => +a.id - +b.id).forEach((question) => { %>
-            <tr id="<%= question.id %>">
-              <td><%= question.id %></td>
-              <td><%= question.attempts.length %></td>
-              <td>
-                <% question.attempts.forEach((attempt, i) => { %>
-                  <a href="<%= attempt %>"><%= i %></a>
-                <% }) %>
-              </td>
-              <td>
-                <button class="toggle-checked button-77" id="<%= question.id %>">
-                  <%= question.checked ? 'True' : 'False' %>
-                </button>
-              </td>
-              <td>
-                <button class="toggle-solved button-77" id="<%= question.id %>">
-                  <%= question.solved ? 'True' : 'False' %>
-                </button>
-              </td>
-            </tr>
-          <% }); %>
+        <% score.questions.sort((a, b) => +a.id - +b.id).forEach((question) => { %>
+        <tr id="<%= question.id %>">
+          <td><%= question.id %></td>
+          <td>
+            <% question.attempts.forEach((attempt, i) => { %>
+            <a href="<%= attempt %>" target="_blank"><%= i %></a>
+            <% }) %>
+          </td>
+          <td><%= question.score %></td>
+          <td><%= question.deduction %></td>
+
+          <td>
+            <button class="toggle-checked button-77" id="<%= question.id %>">
+              <%=question.checked %2? 'True' : 'False'%>
+            </button>
+          </td>
+          <td>
+            <button class="toggle-solved button-77" id="<%= question.id %>">
+              <%=question.solved  %2? 'True' : 'False'%>
+            </button>
+          </td>
+        </tr>
+        <% }); %>
         <% } else { %>
-          <tr>
-            <td colspan="5">No questions available</td>
-          </tr>
+        <tr>
+          <td colspan="5">No questions available</td>
+        </tr>
         <% } %>
-        
+
       </table>
     </div>
   </main>
@@ -91,15 +94,15 @@
         token: localStorage.getItem("token")
       };
       fetch("/editscore", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Error:', error));
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
     });
 
     document.querySelectorAll(".toggle-checked").forEach(toggler => {
@@ -111,15 +114,44 @@
           token: localStorage.getItem("token")
         };
         fetch("/toggleChecked", {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(res => res.json())
+          .then(data => console.log(data)).then(
+            () => {
+              toggler.innerText = toggler.innerText == "True" ? "False" : "True"
+            }
+          )
+          .catch(error => console.error('Error:', error));
+      });
+    });
+
+    document.querySelectorAll(".toggle-solved").forEach(toggler => {
+      toggler.addEventListener("click", () => {
+        const teamId = document.getElementById("teamname").getAttribute("data-id");
+        const data = {
+          id: teamId,
+          questionId: toggler.id,
+          token: localStorage.getItem("token")
+        };
+        fetch("/toggleSolved", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(res => res.json())
+          .then(data => console.log(data)).then(
+            () => {
+              toggler.innerText = toggler.innerText == "True" ? "False" : "True"
+            }
+          )
+          .catch(error => console.error('Error:', error));
       });
     });
   </script>

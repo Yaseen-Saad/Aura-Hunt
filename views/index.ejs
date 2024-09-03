@@ -47,8 +47,8 @@
       <div class="line">Aura Hunt</div>
       <div class="line">Aura Hunt</div>
     </div>
-    <div class="game">
-      <h2>
+    <div data-attribute="<%=locals.id %>"class="game" id="game">
+      <h2 id="gamename">
         <%=locals.name%>
       </h2>
       <p>
@@ -62,8 +62,27 @@
         </div>
         <button class="button-77" id="submit">Check</button>
       </div>
-      <%} %>
     </div>
+    <script>
+      const button = document.getElementById('submit');
+      button.addEventListener('click', () => {
+        const data = {
+          teamId: localStorage.getItem("teamId"),
+          teamToken: localStorage.getItem("teamToken"),
+          gameId: document.getElementById("game").getAttribute("data-attribute"),
+          gamename: document.getElementById("gamename").innerText,
+          answer: "Xffsd"
+        }
+        fetch('/answer', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }).then(res => res.json()).then(data => console.log(data))
+      });
+    </script>
+    <%}else{ %>
     <form id="form" method="post" enctype="multipart/form-data">
       <input type="file" name="file" required>
       <input type="text" id="teamidsubmittion" name="teamid">
@@ -105,7 +124,6 @@
             })
             .then(response => response.json())
             .then(result => {
-              console.log(result);
               if (result.message === 'File uploaded successfully') {
                 document.querySelector(".modal-content p").innerText = "Waiting for auramaster's review";
                 document.getElementById("modal-toggle").click();
@@ -125,7 +143,7 @@
         });
       });
     </script>
-
+    <% } %>
   </main>
   <footer>
     <div>
@@ -133,27 +151,7 @@
     </div>
   </footer>
   <script src="/assets/js/game.js"></script>
-  <script>
-    // fetch('http://localhost:3000/question/' + document.getElementById("gamedata").innerText + "/", {
-    //   method: 'GET',
-    //   headers: { 'Content-Type': 'application/json' },
-    // })
-    //   .then(response => response.json())
-    //   .then(data => console.log(data));
-    // const button = document.getElementById('make-call');
-    // button.addEventListener('click', () => {
-    //   const data = {
-    //     teamId: 219, gameId: 1, answer: "Xffsd"
-    //   }
-    //   console.log(JSON.stringify(data));
 
-    //   fetch('http://localhost:3000/answer', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(data)
-    //   }).then(res => res.json()).then(data => console.log(data))
-    // });
-  </script>
 
 </body>
 

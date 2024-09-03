@@ -1,5 +1,14 @@
 [
   {
+    "id": 0,
+    "name": "Green Man",
+    "description": "Find the school's hidden farm",
+    "score": 250,
+    "deduction": 10,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
     "id": 1,
     "name": "Animal Friendly",
     "description": "Touch a cat without running away from you!",
@@ -25,7 +34,7 @@
   },
   {
     "id": 4,
-    "name": "Where are you?",
+    "name": "Where are you",
     "description": "What is the official school name",
     "score": 50,
     "deduction": 10,
