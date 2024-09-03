@@ -118,59 +118,63 @@ app.post('/toggleSolved', async (req, res) => {
 });
 
 
-
 // Route to Submit an Answer
 app.post('/answer', async (req, res) => {
-  const { teamId, gameId, answer, teamToken, gamename } = req.body;
-  const team = await getTeam(teamId);
-  if (team && team.token === teamToken) {
-    try {
-      const gameDoc = await getGameById(gameId);
-      if (!gameDoc) {
-        return res.status(404).send('Game not found');
-      }
-      const questionRef = db.collection('scores').doc(teamId).collection('questions').doc(gameId.toString());
-      const questionDoc = await questionRef.get();
-      const question = questionDoc.data();
-      if (!question || question.solved) {
-        return res.status(200).json({ message: 'Already Solved' });
-      }
-      if (question.attempts.length < gameDoc.attempts) {
-        question.attempts.push(answer);
-        if (gameDoc.answer === answer) {
-          await db.collection('scores').doc(teamId.toString()).update({
-            checked: false,
-            attempts: admin.firestore.FieldValue.arrayUnion(answer),
-            score: admin.firestore.FieldValue.increment(gameDoc.score),
-            solved: true
-          })
-          res.status(200).json({ message: 'Correct' });
-        } else {
-          if (gameDoc.deduction) {
-            const updateData = {
-              score: admin.firestore.FieldValue.increment(-gameDoc.deduction),
-              questions: {
-                $each: questions.docs.map((question) => ({
-                  checked: false,
-                  attempts: admin.firestore.FieldValue.arrayUnion(answer)
-                })),
-                $set: {}
-              }
-            };
-            
-            await db.collection('scores').doc(teamId.toString()).update(updateData);
-          }
-          res.status(501).json({ message: 'Wrong Answer', rAttempts: gameDoc.attempts - question.attempts.length });
-        }
-      } else {
-        res.status(200).json({ message: 'No more attempts', rAttempts: gameDoc.attempts - question.attempts.length });
-      }
-    } catch (error) {
-      console.error('Error processing answer:', error);
-      res.status(500).send('Internal server error');
+  const { teamId, gameId, answer, teamToken } = req.body;
+
+  try {
+    // Fetch both team and game in parallel to minimize wait time
+    const [team, gameDoc] = await Promise.all([getTeam(teamId), getGameById(gameId)]);
+
+    if (!team || team.token !== teamToken) {
+      return res.status(403).send('Unauthorized');
     }
+
+    if (!gameDoc) {
+      return res.status(404).send('Game not found');
+    }
+
+    const questionRef = db.collection('scores').doc(teamId.toString()).collection('questions').doc(gameId.toString());
+    const questionDoc = await questionRef.get();
+    const question = questionDoc.data();
+
+    if (!question || question.solved) {
+      return res.status(200).json({ message: 'Already Solved' });
+    }
+
+    if (question.attempts.length >= gameDoc.attempts) {
+      return res.status(200).json({ message: 'No more attempts', rAttempts: 0 });
+    }
+
+    if (gameDoc.answer === answer) {
+      await db.collection('scores').doc(teamId.toString()).update({
+        score: admin.firestore.FieldValue.increment(gameDoc.score)
+      });
+      await questionRef.update({
+        attempts: admin.firestore.FieldValue.arrayUnion(answer),
+        solved: true,
+        checked: false
+      });
+
+      return res.status(200).json({ message: 'Correct' });
+    } else {
+      if (gameDoc.deduction) {
+        await db.collection('scores').doc(teamId.toString()).update({
+          score: admin.firestore.FieldValue.increment(-gameDoc.deduction)
+        });
+      }
+      await questionRef.update({
+        attempts: admin.firestore.FieldValue.arrayUnion(answer),
+        checked: false
+      });
+      return res.status(200).json({ message: 'Wrong Answer', rAttempts: gameDoc.attempts - question.attempts.length - 1 });
+    }
+  } catch (error) {
+    console.error('Error processing answer:', error);
+    res.status(500).send('Internal server error');
   }
 });
+
 
 app.get('/adminEditScore', async (req, res) => {
   try {
@@ -296,35 +300,41 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       if (!file) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
-      const newFileName = `${teamid}/${gamename}/${Date.now()}.png`;
+      
+      const fileExtension = file.originalname.split('.').pop(); // Get the file extension
+      const newFileName = `${teamid}/${gamename}/${Date.now()}.${fileExtension}`; // Use the original file extension
       const fileUpload = bucket.file(newFileName);
       const stream = fileUpload.createWriteStream({
         metadata: {
-          contentType: file.mimetype,
+          contentType: file.mimetype, // Use the original MIME type
         },
       });
+  
       stream.on('error', (err) => {
         console.error('Upload error:', err);
         res.status(500).json({ message: 'Failed to upload file' });
-      })
+      });
+  
       await stream.on('finish', async () => {
         try {
-
           const publicUrl = await fileUpload.getSignedUrl({
             action: 'read',
             expires: Date.now() + 1000 * 60 * 60 * 1000
           });
+  
           const questionRef = db.collection('scores').doc(teamid).collection('questions').doc(gameId);
           await questionRef.update({
             checked: false,
             attempts: admin.firestore.FieldValue.arrayUnion(publicUrl[0])
           });
+  
           res.status(200).json({ message: 'File uploaded successfully', url: publicUrl });
         } catch (err) {
           console.error('Error updating document:', err);
           res.status(500).json({ message: 'Failed to update document' });
         }
       });
+  
       stream.end(file.buffer);
     } else {
       res.status(403).json({ message: 'Invalid credentials' });
@@ -333,6 +343,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     console.error('Error processing request:', err);
     res.status(500).json({ message: 'Server error' });
   }
+  
 });
 
 
