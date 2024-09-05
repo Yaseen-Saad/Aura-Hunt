@@ -70,7 +70,7 @@
         const teamToken = localStorage.getItem("teamToken");
         const gameName = document.getElementById("gamename").innerText;
         const gameId = document.getElementById("game").getAttribute("data-attribute");
-        const answer = document.getElementById("teamId").value
+        const answer = document.getElementById("teamId").value.trim()
         const data = {
           teamId: teamId,
           teamToken: teamToken,
@@ -188,7 +188,7 @@
               if (result.message === 'File uploaded successfully') {
                 document.querySelector(".modal-content p").innerText = "Waiting for Aura Master's review";
                 document.getElementById("modal-toggle").click();
-               
+
               } else {
                 throw new Error(result.message);
               }
