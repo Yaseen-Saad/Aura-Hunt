@@ -1,14 +1,5 @@
 [
   {
-    "id": 0,
-    "name": "Green Man",
-    "description": "Find the school's hidden farm",
-    "score": 250,
-    "deduction": 10,
-    "attempts": "Infinity",
-    "proof": true
-  },
-  {
     "id": 1,
     "name": "The Ancient Cats",
     "description": "As the ancient cats of old awaken, the school's grounds transform into a vast and untamed wilderness. There is nowhere safe any more, and the air is alive with the whispers of ancient energies. The Aura Master, sensing your deepest fears, sets forth a challenge: to capture a majestic cat, its fur radiating an aura of serenity and power. Your mission is to venture into this untamed expanse, locate one of these majestic felines, and gently touch its soft fur without panicking or running away. As you capture the moment on camera, your aura will be attuned to the cat's energy, granting you a deeper understanding of the delicate balance between the physical and spiritual realms. Will you rise to this challenge and break free from your fear, or will you succumb to the wilds and let fear consume you? The choice is yours.",
@@ -18,9 +9,9 @@
   },
   {
     "id": 2,
-    "name": "Green Man",
-    "description": "Find the school's hidden farm",
-    "score": 250,
+    "name": "The Hidden Oasis",
+    "description": "As the school's campus transforms into a mystical realm, the Green Farm, a hidden oasis, awaits those who dare to explore. Located in a place that's higher than the nearby land, thus you have to aim high, this lush haven is home to majestic plants that roam free. \n\n Your journey will take you to a place where ancient energies swirl and whispers of the ancients echo through the trees. As you reach the farm, capture the moment on camera, and your aura will be attuned to the farm's energy, granting you a deeper understanding of the delicate balance between the physical and Celestial realms.",
+    "score": 300,
     "attempts": "Infinity",
     "proof": true
   },
