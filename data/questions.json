@@ -34,6 +34,15 @@
   },
   {
     "id": 6,
+    "name": "Is It a Full Moon",
+    "description": "In the mystic land of STEM High School for Boys - 6th of October, the whispers of the aura masters echo through the halls, foretelling a night of unparalleled magic. As the moon reaches its zenith today, the aura masters prepare for the lunar convergence, a rare and wondrous event that awakens the hidden potential within the school's ancient walls. The silvery glow of the moon illuminates the path to the Chamber of Wisdom, where the secrets of the universe await. As the moon reaches its zenith, with its full aura potential, the aura masters embark on a quest to harness its celestial aura. They require a worthy apprentice to capture the most resplendent photograph of the moon's full glory. Should you rise to this challenge and unlock the moon's power? you shall be rewarded with a portion of the moon's aura. Bring forth your most majestic image of the moon's zenith and claim your reward as your aura reaches its maximum potential.",
+    "type": "firstToSolve",
+    "score": 300,
+    "attempts": "2",
+    "proof": true
+  },
+  {
+    "id": 6,
     "name": "How Beautiful is the moon !!",
     "description": "Take a picture of the moon and upload it rapidly",
     "type": "firstToSolve",
