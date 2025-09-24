@@ -1,0 +1,61 @@
+[
+  {
+    "id": 1,
+    "name": "The Ancient Cats",
+    "description": "As the ancient cats of old awaken, the school's grounds transform into a vast and untamed wilderness. There is nowhere safe any more, and the air is alive with the whispers of ancient energies. The Aura Master, sensing your deepest fears, sets forth a challenge: to capture a majestic cat, its fur radiating an aura of serenity and power. Your mission is to venture into this untamed expanse, locate one of these majestic felines, and gently touch its soft fur without panicking or running away. As you capture the moment on camera, your aura will be attuned to the cat's energy, granting you a deeper understanding of the delicate balance between the physical and spiritual realms. Will you rise to this challenge and break free from your fear, or will you succumb to the wilds and let fear consume you? The choice is yours.",
+    "score": 300,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
+    "id": 2,
+    "name": "The Hidden Oasis",
+    "description": "As the school's campus transforms into a mystical realm, the Green Farm, a hidden oasis, awaits those who dare to explore. Located in a place that's higher than the nearby land, thus you have to aim high, this lush haven is home to majestic plants that roam free. \n\n Your journey will take you to a place where ancient energies swirl and whispers of the ancients echo through the trees. As you reach the farm, capture the moment on camera, and your aura will be attuned to the farm's energy, granting you a deeper understanding of the delicate balance between the physical and Celestial realms.",
+    "score": 300,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
+    "id": 3,
+    "name": "F.I.R.E.S.T.O.R.M.",
+    "description": "As the whispers of the past echo through the empty halls, a hidden, burnt place awaits those who dare to uncover its secrets. The remnants of a forgotten firestorm stay still, a testament to the fury that once ravaged the school. The air is thick with history, and the eerie silence is palpable.\n\nYour journey begins with a quest to uncover the truth behind this ancient tale. You must dig through old records and dusty archives, searching for clues that will lead you to the burnt place. The path is treacherous, and the whispers of the past are strong, but you must persevere to uncover the secrets that lie within.\n\nOnce you've found the burnt place, you'll need to quickly capture the image of the white door as proof of your discovery. But beware, for the aura of the past is strong here, and you'll need to be cautious not to get caught in its web.\n\nWill you rise to this challenge and uncover the secrets of the burnt place, or will you succumb to the whispers of the past and let fear consume you? The choice is yours.",
+    "attempts": "Infinity",
+    "score": 300,
+    "proof": true
+  },
+  {
+    "id": 4,
+    "name": "Is It a Full Moon",
+    "description": "In the mystic land of STEM High School for Boys - 6th of October, the whispers of the aura masters echo through the halls, foretelling a night of unparalleled magic. As the moon reaches its zenith today, the aura masters prepare for the lunar convergence, a rare and wondrous event that awakens the hidden potential within the school's ancient walls. The silvery glow of the moon illuminates the path to the Chamber of Wisdom, where the secrets of the universe await. As the moon reaches its zenith, with its full aura potential, the aura masters embark on a quest to harness its celestial aura. They require a worthy apprentice to capture the most resplendent photograph of the moon's full glory. Should you rise to this challenge and unlock the moon's power? you shall be rewarded with a portion of the moon's aura. Bring forth your most majestic image of the moon's zenith and claim your reward as your aura reaches its maximum potential.",
+    "type": "firstToSolve",
+    "score": 50,
+    "attempts": "2",
+    "proof": true
+  },
+  {
+    "id": 5,
+    "name": "The Police Heart",
+    "description": "As the aura master's ethereal energies enveloped STEM High School for Boys, 6th of October, the police of time and space arrived,  their intentions shifted. Initially, they sought to tap into the aura master's powers, but now they're drawn to the school's exceptional minds - the students who play the game. The temporal authorities, renowned for their expertise in extracting and harnessing intelligence quotients, have been attracted by the school's exceptional talent pool. With their advanced chrono-temporal technology, they've set up their equipment for the extractions, with a hidden police sign at its heart - a mystical symbol embedded within the school's intricate architecture. The aura masters can shatter this sign with ease, but the police are distributing their sensing, making it a challenge, thus the aura masters asked you straightforward: locate the sign, capture its image, and submit it as proof of discovery. But be cautious, as the police's extraction methods are rumored to be as complex and unpredictable as the fabric of time itself, making this challenge a thrilling test of wit, strategy, and teamwork.",
+    "type": "firstToSolve",
+    "score": 100,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
+    "id": 6,
+    "name": "Elixir of Aura",
+    "description": "In the mystical realm of STEM High School for Boys - 6th of October, the whispers of the auras weave a tapestry of ancient wisdom, the quest for hydration has become a legendary odyssey. The esteemed scholars of this hallowed institution have long sought to unlock the secrets of the Enchanted Water Dispensers, hidden throughout the hallowed halls. These mystical fountains of crystal clear water hold the key to unlocking the very essence of aura, imbuing the drinker with not only radiant vitality, but also the power to harness the whispers of the auras. But alas, these sacred vessels are guarded by the enigmatic Aura Masters, who shall only yield to those who have mastered the arcane art of aura manipulation. To claim the Cup of Eternal Hydration, one must embark on a perilous journey to fill the cup with water from at least 10 of each of the tewlve Enchanted Water Dispensers, scattered throughout the school. The path is fraught with danger, as the whispers of the auras will attempt to mislead and confuse even the most skilled seekers. Bring a Picture for each water fountain to the aura masters and see your ara blowing up.",
+    "type": "firstToSolve",
+    "score": 200,
+    "attempts": "Infinity",
+    "proof": true
+  },
+  {
+    "id": 7,
+    "name": "Are You Hungery Too",
+    "description": "There are 3 secret commands hidden in the 3 resturants, collect the whole 3 and get your 300 auras, or get only one and get only 40 auras (two for 100 auras), be fast, another team might had already got them, also you can do negotiations.",
+    "score": 300,
+    "attempts": "Infinity",
+    "proof": false
+  }
+]

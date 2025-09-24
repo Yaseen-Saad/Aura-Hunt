@@ -1,0 +1,352 @@
+[
+  {
+    "id": "01",
+    "name": "Team 01",
+    "password": "stem@2020",
+    "token": "aura_hunt_01_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "02",
+    "name": "Team 02",
+    "password": "stem@2020",
+    "token": "aura_hunt_02_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "03",
+    "name": "Team 03",
+    "password": "stem@2020",
+    "token": "aura_hunt_03_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "04",
+    "name": "Team 04",
+    "password": "stem@2020",
+    "token": "aura_hunt_04_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "05",
+    "name": "Team 05",
+    "password": "stem@2020",
+    "token": "aura_hunt_05_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "06",
+    "name": "Team 06",
+    "password": "stem@2020",
+    "token": "aura_hunt_06_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "07",
+    "name": "Team 07",
+    "password": "stem@2020",
+    "token": "aura_hunt_07_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "08",
+    "name": "Team 08",
+    "password": "stem@2020",
+    "token": "aura_hunt_08_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "09",
+    "name": "Team 09",
+    "password": "stem@2020",
+    "token": "aura_hunt_09_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "10",
+    "name": "Team 10",
+    "password": "stem@2020",
+    "token": "aura_hunt_10_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "101",
+    "name": "Team 101",
+    "password": "stem@2020",
+    "token": "aura_hunt_101_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "102",
+    "name": "Team 102",
+    "password": "stem@2020",
+    "token": "aura_hunt_102_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "103",
+    "name": "Team 103",
+    "password": "stem@2020",
+    "token": "aura_hunt_103_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "104",
+    "name": "Team 104",
+    "password": "stem@2020",
+    "token": "aura_hunt_104_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "105",
+    "name": "Team 105",
+    "password": "stem@2020",
+    "token": "aura_hunt_105_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "106",
+    "name": "Team 106",
+    "password": "stem@2020",
+    "token": "aura_hunt_106_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "107",
+    "name": "Team 107",
+    "password": "stem@2020",
+    "token": "aura_hunt_107_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "108",
+    "name": "Team 108",
+    "password": "stem@2020",
+    "token": "aura_hunt_108_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "109",
+    "name": "Team 109",
+    "password": "stem@2020",
+    "token": "aura_hunt_109_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "110",
+    "name": "Team 110",
+    "password": "stem@2020",
+    "token": "aura_hunt_110_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "111",
+    "name": "Team 111",
+    "password": "stem@2020",
+    "token": "aura_hunt_111_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "112",
+    "name": "Team 112",
+    "password": "stem@2020",
+    "token": "aura_hunt_112_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "113",
+    "name": "Team 113",
+    "password": "stem@2020",
+    "token": "aura_hunt_113_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "114",
+    "name": "Team 114",
+    "password": "stem@2020",
+    "token": "aura_hunt_114_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "115",
+    "name": "Team 115",
+    "password": "stem@2020",
+    "token": "aura_hunt_115_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "116",
+    "name": "Team 116",
+    "password": "stem@2020",
+    "token": "aura_hunt_116_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "117",
+    "name": "Team 117",
+    "password": "stem@2020",
+    "token": "aura_hunt_117_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "118",
+    "name": "Team 118",
+    "password": "stem@2020",
+    "token": "aura_hunt_118_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "119",
+    "name": "Team 119",
+    "password": "stem@2020",
+    "token": "aura_hunt_119_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "120",
+    "name": "Team 120",
+    "password": "stem@2020",
+    "token": "aura_hunt_120_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "201",
+    "name": "Team 201",
+    "password": "stem@2020",
+    "token": "aura_hunt_201_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "202",
+    "name": "Team 202",
+    "password": "stem@2020",
+    "token": "aura_hunt_202_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "203",
+    "name": "Team 203",
+    "password": "stem@2020",
+    "token": "aura_hunt_203_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "204",
+    "name": "Team 204",
+    "password": "stem@2020",
+    "token": "aura_hunt_204_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "205",
+    "name": "Team 205",
+    "password": "stem@2020",
+    "token": "aura_hunt_205_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "206",
+    "name": "Team 206",
+    "password": "stem@2020",
+    "token": "aura_hunt_206_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "207",
+    "name": "Team 207",
+    "password": "stem@2020",
+    "token": "aura_hunt_207_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "208",
+    "name": "Team 208",
+    "password": "stem@2020",
+    "token": "aura_hunt_208_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "209",
+    "name": "Team 209",
+    "password": "stem@2020",
+    "token": "aura_hunt_209_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "210",
+    "name": "Team 210",
+    "password": "stem@2020",
+    "token": "aura_hunt_210_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "211",
+    "name": "Team 211",
+    "password": "stem@2020",
+    "token": "aura_hunt_211_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "212",
+    "name": "Team 212",
+    "password": "stem@2020",
+    "token": "aura_hunt_212_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "213",
+    "name": "Team 213",
+    "password": "stem@2020",
+    "token": "aura_hunt_213_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "214",
+    "name": "Team 214",
+    "password": "stem@2020",
+    "token": "aura_hunt_214_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "215",
+    "name": "Team 215",
+    "password": "stem@2020",
+    "token": "aura_hunt_215_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "216",
+    "name": "Team 216",
+    "password": "stem@2020",
+    "token": "aura_hunt_216_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "217",
+    "name": "Team 217",
+    "password": "stem@2020",
+    "token": "aura_hunt_217_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "218",
+    "name": "Team 218",
+    "password": "stem@2020",
+    "token": "aura_hunt_218_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "219",
+    "name": "Team 219",
+    "password": "stem@2020",
+    "token": "aura_hunt_219_secure_token_2024",
+    "score": 0
+  },
+  {
+    "id": "220",
+    "name": "Team 220",
+    "password": "stem@2020",
+    "token": "aura_hunt_220_secure_token_2024",
+    "score": 0
+  }
+]
