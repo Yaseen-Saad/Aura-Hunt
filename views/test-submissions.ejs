@@ -184,6 +184,39 @@
   </div>
 
   <script>
+    // Load questions when page loads
+    async function loadQuestions() {
+      try {
+        const response = await fetch('/api/questions');
+        const questions = await response.json();
+        
+        const imageSelect = document.getElementById('imageGameId');
+        const textSelect = document.getElementById('textGameId');
+        
+        // Clear existing options except the first one
+        imageSelect.innerHTML = '<option value="">Select Question</option>';
+        textSelect.innerHTML = '<option value="">Select Question</option>';
+        
+        // Add questions to both dropdowns
+        questions.forEach(question => {
+          const option1 = document.createElement('option');
+          option1.value = question.id;
+          option1.textContent = `${question.id} - ${question.title}`;
+          imageSelect.appendChild(option1);
+          
+          const option2 = document.createElement('option');
+          option2.value = question.id;
+          option2.textContent = `${question.id} - ${question.title}`;
+          textSelect.appendChild(option2);
+        });
+      } catch (error) {
+        console.error('Failed to load questions:', error);
+      }
+    }
+
+    // Load questions when DOM is ready
+    document.addEventListener('DOMContentLoaded', loadQuestions);
+
     function showMessage(message, type) {
       const container = document.getElementById('messageContainer');
       const messageDiv = document.createElement('div');
