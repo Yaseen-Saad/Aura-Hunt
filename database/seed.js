@@ -11,7 +11,7 @@ async function seedDatabase() {
     // Use the new comprehensive questions file
     const questionsData = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/questions-new.json'), 'utf8'));
 
-    // Seed Questions
+    // Seed Questions (using existing schema for now)
     console.log('📚 Seeding questions...');
     const { error: questionsError } = await supabase
       .from('questions')
@@ -20,13 +20,6 @@ async function seedDatabase() {
           id: q.id,
           name: q.name,
           description: q.description,
-          clue: q.clue || '',
-          clue_position: q.clue_position || '',
-          url: q.url || '',
-          qr_position: q.qr_position || '',
-          answer: q.answer || '',
-          status: q.status || '',
-          note: q.note || '',
           score: q.score || 0,
           deduction: q.deduction || 0,
           attempts: q.attempts || 'Infinity',
