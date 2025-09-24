@@ -208,5 +208,21 @@
     "attempts": "Infinity",
     "proof": true,
     "type": "hidden"
+  },
+  {
+    "id": 14,
+    "name": "The Keeper of Flavors",
+    "clue": "Where hunger fades and thirst takes flight,\nA guardian serves from dawn till night.\nNo books nor maps can show the way,\nBut seek the heart where students stay.\nStand with the keeper, whose spirit feeds,\nCapture the moment—fulfill your needs.",
+    "clue_position": "On the wall near the canteen entrance.",
+    "description": "In a busy place where students gather, there is a guardian whose role is more important than it first appears. He restores strength, lightens moods, and keeps the school's heart alive. To finish this challenge, you must discover this hidden figure, stand with him, and take a photo together. Only then will your aura be lifted by the Keeper of Flavors.",
+    "url": "https://aura-hunt.vercel.app/game/The%20Keeper%20of%20Flavors",
+    "qr_position": "On the wall near the canteen entrance",
+    "answer": "A photo with the canteen keeper/staff member",
+    "score": 150,
+    "deduction": 20,
+    "status": "active",
+    "attempts": 3,
+    "proof": true,
+    "type": "regular"
   }
 ]
