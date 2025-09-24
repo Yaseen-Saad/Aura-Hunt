@@ -531,6 +531,34 @@ app.get('/test-submissions', async (req, res) => {
   }
 });
 
+// Questions list endpoint
+app.get('/api/questions', async (req, res) => {
+  try {
+    const { data: questions, error } = await supabase
+      .from('questions')
+      .select('*')
+      .order('id');
+
+    if (error) {
+      console.error('Error fetching questions:', error);
+      return res.status(500).json({ error: 'Failed to fetch questions' });
+    }
+
+    res.status(200).json({ 
+      success: true,
+      count: questions?.length || 0,
+      questions: questions || []
+    });
+
+  } catch (error) {
+    console.error('Questions endpoint error:', error);
+    res.status(500).json({ 
+      error: 'Questions endpoint failed', 
+      details: error.message
+    });
+  }
+});
+
 // Diagnostic endpoint to test bucket access
 app.get('/test-bucket', async (req, res) => {
   try {
