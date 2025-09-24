@@ -1,0 +1,44 @@
+body {
+  @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");
+}
+body .game {
+  display: flex !important;
+  flex-direction: column;
+}
+body table {
+  width: 100%;
+}
+body th {
+  display: flex;
+  text-transform: uppercase;
+  width: 100%;
+  font-size: 2rem;
+  justify-content: center;
+  align-items: center;
+  padding: 18px 0;
+}
+body tr {
+  display: flex;
+  width: 100%;
+  padding: 18px 0;
+}
+body tr:nth-of-type(odd) {
+  background: #fff;
+}
+body tr.team {
+  background-color: #00ae6b;
+}
+body tr:nth-child(2) {
+  background-color: Gold;
+}
+body tr:nth-child(3) {
+  background-color: silver;
+}
+body tr:nth-child(4) {
+  background-color: burlywood;
+}
+body td,
+body th {
+  flex: 1 1 20%;
+  text-align: center;
+}/*# sourceMappingURL=scoreboard.css.map */

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Aura Hunt</title>
+  <link rel="shortcut icon" href="/assets/images/Logo.svg" type="image/x-icon">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/scoreboard.css">
+  <style>
+    .admin-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .admin-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .admin-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .admin-btn.reset {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .admin-btn.reset:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    .admin-btn.seed {
+      background: #27ae60;
+      color: white;
+    }
+
+    .admin-btn.seed:hover {
+      background: #229954;
+      transform: translateY(-2px);
+    }
+
+    .admin-btn.refresh {
+      background: #3498db;
+      color: white;
+    }
+
+    .admin-btn.refresh:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .team-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .team-info {
+      flex: 1;
+    }
+
+    .team-name {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+
+    .team-score {
+      font-size: 2em;
+      font-weight: 900;
+      color: #f39c12;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .score-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .score-input {
+      width: 100px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-success {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #229954;
+    }
+
+    .btn-warning {
+      background: #f39c12;
+      color: white;
+    }
+
+    .btn-warning:hover {
+      background: #d68910;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .questions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .question-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .question-id {
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #3498db;
+      margin-bottom: 10px;
+    }
+
+    .question-status {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 15px;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-checked {
+      background: #f39c12;
+      color: white;
+    }
+
+    .status-solved {
+      background: #27ae60;
+      color: white;
+    }
+
+    .status-pending {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .question-actions {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .attempts-count {
+      color: #e74c3c;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .success-message, .error-message {
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-weight: 600;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    @media (max-width: 768px) {
+      .team-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .score-controls {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .admin-controls {
+        flex-direction: column;
+      }
+
+      .questions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <img src="/assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <a href="/instructions" class="button-77">Instructions</a>
+      <a href="/scoreboard" class="button-77">Public Scoreboard</a>
+      <a href="/secretAdminsAuraRoomforEditingScore" class="button-77">Admin Panel</a>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+    <div class="admin-header">
+      <h1>🛠️ Admin Dashboard</h1>
+      <p>Manage teams, scores, and game progress</p>
+    </div>
+
+    <div class="admin-controls">
+      <button onclick="resetDatabase()" class="admin-btn reset">🔄 Reset All Data</button>
+      <button onclick="seedDatabase()" class="admin-btn seed">🌱 Seed Database</button>
+      <button onclick="location.reload()" class="admin-btn refresh">↻ Refresh Page</button>
+      <a href="/generate-json" class="admin-btn" style="background: #9b59b6; color: white;">📊 Export JSON</a>
+    </div>
+
+    <div id="message-container"></div>
+
+    <div class="teams-container">
+      <% if (locals.scores && locals.scores.length > 0) { %>
+        <% locals.scores.sort((a, b) => b.score - a.score).forEach((team, index) => { %>
+          <div class="team-card" id="team-<%= team.id %>">
+            <div class="team-header">
+              <div class="team-info">
+                <div class="team-name">
+                  #<%= index + 1 %> - <%= team.name %> 
+                  <small>(ID: <%= team.id %>)</small>
+                </div>
+                <div class="team-score"><%= team.score || 0 %> Aura</div>
+                <div class="score-controls">
+                  <input type="number" class="score-input" id="aura-<%= team.id %>" placeholder="±Aura" step="10">
+                  <button onclick="editScore('<%= team.id %>')" class="btn-small btn-success">Update Score</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="questions-grid">
+              <% if (team.questions && team.questions.length > 0) { %>
+                <% team.questions.forEach(question => { %>
+                  <div class="question-card">
+                    <div class="question-id">Q<%= question.question_id %></div>
+                    <div class="question-status">
+                      <span class="status-badge <%= question.checked > 0 ? 'status-checked' : 'status-pending' %>">
+                        Checked: <%= question.checked %>
+                      </span>
+                      <span class="status-badge <%= question.solved > 0 ? 'status-solved' : 'status-pending' %>">
+                        <%= question.solved > 0 ? 'SOLVED' : 'PENDING' %>
+                      </span>
+                    </div>
+                    <div class="question-actions">
+                      <button onclick="toggleChecked('<%= team.id %>', '<%= question.question_id %>')" 
+                              class="btn-small btn-warning" title="Mark as Checked">
+                        ✓
+                      </button>
+                      <button onclick="toggleSolved('<%= team.id %>', '<%= question.question_id %>')" 
+                              class="btn-small btn-success" title="Mark as Solved">
+                        ✅
+                      </button>
+                    </div>
+                    <% if (question.attempts && question.attempts.length > 0) { %>
+                      <div class="attempts-count">
+                        <%= question.attempts.length %> attempt(s)
+                      </div>
+                    <% } %>
+                  </div>
+                <% }); %>
+              <% } else { %>
+                <div class="question-card">
+                  <div style="color: #95a5a6;">No questions data</div>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="team-card">
+          <div class="team-header">
+            <div class="team-info">
+              <div class="team-name">No teams found</div>
+              <p style="color: #95a5a6;">Please seed the database first.</p>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October - Admin Panel</p>
+    </div>
+  </footer>
+
+  <script>
+    const ADMIN_TOKEN = '<%= process.env.ADMIN_REQUEST_TOKEN %>';
+
+    function showMessage(message, type = 'success') {
+      const container = document.getElementById('message-container');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+      messageDiv.textContent = message;
+      container.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        container.removeChild(messageDiv);
+      }, 5000);
+    }
+
+    async function editScore(teamId) {
+      const auraInput = document.getElementById(`aura-${teamId}`);
+      const auraValue = parseInt(auraInput.value);
+      
+      if (isNaN(auraValue)) {
+        showMessage('Please enter a valid number', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/editscore', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: teamId,
+            aura: auraValue,
+            token: ADMIN_TOKEN
+          })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage(`Score updated for team ${teamId}: ${auraValue > 0 ? '+' : ''}${auraValue} aura`);
+          auraInput.value = '';
+          // Update the displayed score
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          showMessage(result.message || 'Failed to update score', 'error');
+        }
+      } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+      }
+    }
+
+    async function toggleChecked(teamId, questionId) {
+      try {
+        const response = await fetch('/toggleChecked', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: teamId,
+            questionId: questionId,
+            token: ADMIN_TOKEN
+          })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage(`Question ${questionId} marked as checked for team ${teamId}`);
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          showMessage(result.message || 'Failed to toggle checked status', 'error');
+        }
+      } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+      }
+    }
+
+    async function toggleSolved(teamId, questionId) {
+      try {
+        const response = await fetch('/toggleSolved', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: teamId,
+            questionId: questionId,
+            token: ADMIN_TOKEN
+          })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage(`Question ${questionId} marked as solved for team ${teamId}`);
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          showMessage(result.message || 'Failed to toggle solved status', 'error');
+        }
+      } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+      }
+    }
+
+    async function resetDatabase() {
+      if (!confirm('⚠️ Are you sure you want to reset ALL data? This will:\n\n• Reset all team scores to 0\n• Clear all question attempts\n• Remove all image submissions\n\nThis action CANNOT be undone!')) {
+        return;
+      }
+
+      try {
+        const response = await fetch('/supersecretcommandtoresetdb');
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('Database reset successfully! All scores and progress cleared.');
+          setTimeout(() => location.reload(), 2000);
+        } else {
+          showMessage(result.message || 'Failed to reset database', 'error');
+        }
+      } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+      }
+    }
+
+    async function seedDatabase() {
+      if (!confirm('🌱 Seed database with initial data?\n\nThis will add all teams and questions from JSON files.')) {
+        return;
+      }
+
+      try {
+        const response = await fetch('/supersecretcommandtostartthedatabasewiththejsonquires');
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('Database seeded successfully! All teams and questions loaded.');
+          setTimeout(() => location.reload(), 2000);
+        } else {
+          showMessage(result.message || 'Failed to seed database', 'error');
+        }
+      } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+      }
+    }
+
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+      console.log('Auto-refreshing admin dashboard...');
+      location.reload();
+    }, 30000);
+
+    // Glitch effect
+    setInterval(() => {
+      const glitchElements = document.querySelectorAll(".glitch");
+      glitchElements.forEach(el => {
+        el.classList.toggle("active");
+        setTimeout(() => {
+          el.classList.toggle("active");
+        }, 1000);
+      });
+    }, 10000);
+  </script>
+</body>
+</html>

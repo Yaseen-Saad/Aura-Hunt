@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Hunt</title>
+  <link rel="shortcut icon" href="/assets/images/Logo.svg" type="image/x-icon">
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    .game {
+      display: flex !important;
+      flex-direction: column;
+    }
+
+    #green {
+      color: #20a92d;
+    }
+
+    #red {
+      color: #a93520;
+    }
+
+    h2 {
+      margin: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav><img src="/assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <a href="/instructions" class="button-77" id="instructions">Instructions</a>
+      <a href="/scoreboard" class="button-77" id="scoreboard">Scoreboard</a>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+    <div class="modal-container">
+      <input id="modal-toggle" type="checkbox">
+      <label class="modal-backdrop" for="modal-toggle"></label>
+      <div class="modal-content">
+        <label class="modal-close" for="modal-toggle">&#x2715;</label>
+        <p>Ready to Hunt Aura ?</p>
+        <label class="button-77" id="alert-button" for="modal-toggle">OK</label>
+      </div>
+    </div>
+    <div class="glitch">
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+      <div class="line">Aura Hunt</div>
+    </div>
+    <div data-attribute="<%=locals.id %>" class="game" id="game">
+      <h2 id="gamename">
+        <%=locals.name%>
+      </h2>
+      <p>
+        <%=locals.description%>
+      </p>
+      <p>Solving gives you <span id="green"> <%= locals.score %>+</span> auras</p>
+      <% if (locals.deduction) {%><p>A wrongs answer gives you <span id="red"> <%= locals.deduction %>-</span> auras</p><% } %>
+      <div>
+        <div id="txt1" class="input">
+          <span id="hide1" class="hide"></span>
+          <input id="teamId" type="text" value="Answer here ...">
+        </div>
+        <button class="button-77" id="submit">Check</button>
+      </div>
+    </div>
+    <script>
+      const button = document.getElementById('submit');
+      button.addEventListener('click', () => {
+        const teamId = localStorage.getItem("teamId");
+        const teamToken = localStorage.getItem("teamToken");
+        const gameName = document.getElementById("gamename").innerText;
+        const gameId = document.getElementById("game").getAttribute("data-attribute");
+        const answer = document.getElementById("teamId").value.trim()
+        const data = {
+          teamId: teamId,
+          teamToken: teamToken,
+          gameId: gameId,
+          gamename: gameName,
+          answer: answer
+        }
+        if (!gameId || !teamId || !teamToken || !gameName) {
+          document.querySelector(".modal-content p").innerText = "Please Log in Again";
+          document.getElementById("modal-toggle").click();
+          setTimeout(() => location.href = "../", 2000);
+          document.querySelector("#alert-button").onclick = () => {
+            location.href = "../";
+          };
+          return;
+        }
+        if (!answer || answer == "Answer here ...") {
+          document.querySelector(".modal-content p").innerText = "Please Enter Your Answer";
+          document.getElementById("modal-toggle").click();
+          return;
+        }
+        fetch('/answer', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(result => {
+
+            console.log(result);
+            if (result.message === 'Correct') {
+              document.querySelector(".modal-content p").innerText = "Watch your aura increasing";
+              document.getElementById("modal-toggle").click();
+            } else if (result.message === "Wrong Answer") {
+              document.querySelector(".modal-content p").innerText = `Wrong Answer,\n Remaining Attempts: ${result.rAttempts}`;
+              document.getElementById("modal-toggle").click();
+            } else {
+              document.querySelector(".modal-content p").innerText = result.message
+              document.getElementById("modal-toggle").click();
+            }
+          })
+          .catch(error => {
+            document.querySelector(".modal-content p").innerText = error.message;
+            document.getElementById("modal-toggle").click();
+          });
+      });
+    </script>
+  </main>
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October</p>
+    </div>
+  </footer>
+  <script src="/assets/js/game.js"></script>
+</body>
+
+</html>
+
+

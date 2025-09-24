@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submission Review - Aura Hunt Admin</title>
+  <link rel="shortcut icon" href="/assets/images/Logo.svg" type="image/x-icon">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/scoreboard.css">
+  <style>
+    .admin-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid transparent;
+    }
+
+    .nav-tab.active {
+      background: #3498db;
+      border-color: #2980b9;
+      color: white;
+    }
+
+    .nav-tab:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .submission-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .submission-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .submission-info {
+      flex: 1;
+    }
+
+    .team-name {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+
+    .question-name {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #3498db;
+      margin-bottom: 10px;
+    }
+
+    .submission-meta {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .meta-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9em;
+    }
+
+    .score-info {
+      background: #27ae60;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .deduction-info {
+      background: #e74c3c;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .submission-content {
+      margin: 20px 0;
+    }
+
+    .submission-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .submission-image {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .submission-image img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .submission-image img:hover {
+      transform: scale(1.05);
+    }
+
+    .image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      color: white;
+      padding: 10px;
+      font-size: 0.8em;
+    }
+
+    .submission-text {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .review-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .action-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-correct {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-correct:hover {
+      background: #229954;
+      transform: translateY(-2px);
+    }
+
+    .btn-incorrect {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-incorrect:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    .btn-mark-checked {
+      background: #f39c12;
+      color: white;
+    }
+
+    .btn-mark-checked:hover {
+      background: #d68910;
+      transform: translateY(-2px);
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-pending {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .status-checked {
+      background: #f39c12;
+      color: white;
+    }
+
+    .status-solved {
+      background: #27ae60;
+      color: white;
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .filter-select {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 14px;
+    }
+
+    .filter-select option {
+      background: #2c3e50;
+      color: white;
+    }
+
+    .no-submissions {
+      text-align: center;
+      padding: 60px 20px;
+      color: #95a5a6;
+    }
+
+    .no-submissions h3 {
+      margin-bottom: 10px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 20px;
+    }
+
+    .modal-image {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      opacity: 0.7;
+    }
+
+    .loading-spinner {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1001;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+      text-align: center;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 2s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .success-message, .error-message {
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    @media (max-width: 768px) {
+      .submission-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .review-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .filter-controls {
+        flex-direction: column;
+      }
+
+      .submission-images {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <img src="/assets/images/Logo.svg" alt="Aura Hunt">
+    <div>
+      <a href="/instructions" class="button-77">Instructions</a>
+      <a href="/scoreboard" class="button-77">Public Scoreboard</a>
+      <a href="/secretAdminsAuraRoomforEditingScore" class="button-77">Admin Panel</a>
+      <a href="/admin/submissions" class="button-77">Review Submissions</a>
+    </div>
+  </nav>
+  <div class="overlayer"></div>
+  <main>
+    <div class="admin-header">
+      <h1>📋 Submission Review Center</h1>
+      <p>Review and grade team submissions</p>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="filterSubmissions('all')">All Submissions</button>
+      <button class="nav-tab" onclick="filterSubmissions('pending')">Pending Review</button>
+      <button class="nav-tab" onclick="filterSubmissions('checked')">Checked</button>
+      <button class="nav-tab" onclick="filterSubmissions('solved')">Solved</button>
+    </div>
+
+    <div class="filter-controls">
+      <select class="filter-select" id="teamFilter" onchange="applyFilters()">
+        <option value="">All Teams</option>
+      </select>
+      <select class="filter-select" id="questionFilter" onchange="applyFilters()">
+        <option value="">All Questions</option>
+      </select>
+      <button class="nav-tab" onclick="location.reload()">🔄 Refresh</button>
+    </div>
+
+    <div id="message-container"></div>
+
+    <div id="submissions-container">
+      <% if (locals.submissions && locals.submissions.length > 0) { %>
+        <% locals.submissions.forEach(submission => { %>
+          <div class="submission-card" 
+               data-team="<%= submission.team_id %>" 
+               data-question="<%= submission.question_id %>" 
+               data-status="<%= submission.solved > 0 ? 'solved' : (submission.checked > 0 ? 'checked' : 'pending') %>">
+            
+            <div class="submission-header">
+              <div class="submission-info">
+                <div class="team-name">
+                  <%= submission.team_name %> 
+                  <small>(Team <%= submission.team_id %>)</small>
+                </div>
+                <div class="question-name">Q<%= submission.question_id %>: <%= submission.question_name %></div>
+                <div class="submission-meta">
+                  <span class="meta-item">
+                    📅 <%= new Date(submission.created_at).toLocaleString() %>
+                  </span>
+                  <span class="meta-item">
+                    🔄 Attempt #<%= submission.attempt_count %>
+                  </span>
+                  <span class="status-badge status-<%= submission.solved > 0 ? 'solved' : (submission.checked > 0 ? 'checked' : 'pending') %>">
+                    <%= submission.solved > 0 ? 'SOLVED' : (submission.checked > 0 ? 'CHECKED' : 'PENDING') %>
+                  </span>
+                </div>
+                <div class="submission-meta">
+                  <span class="score-info">+<%= submission.question_score %> Aura</span>
+                  <% if (submission.question_deduction > 0) { %>
+                    <span class="deduction-info">-<%= submission.question_deduction %> Aura</span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+
+            <div class="submission-content">
+              <% if (submission.image_attempts && submission.image_attempts.length > 0) { %>
+                <h4>📸 Image Submissions:</h4>
+                <div class="submission-images">
+                  <% submission.image_attempts.forEach((imageUrl, index) => { %>
+                    <div class="submission-image">
+                      <img src="<%= imageUrl %>" 
+                           alt="Submission <%= index + 1 %>" 
+                           onclick="openImageModal('<%= imageUrl %>')">
+                      <div class="image-overlay">
+                        Image <%= index + 1 %>
+                      </div>
+                    </div>
+                  <% }); %>
+                </div>
+              <% } %>
+
+              <% if (submission.text_attempts && submission.text_attempts.length > 0) { %>
+                <h4>📝 Text Submissions:</h4>
+                <% submission.text_attempts.forEach((text, index) => { %>
+                  <div class="submission-text">Submission <%= index + 1 %>: <%= text %></div>
+                <% }); %>
+              <% } %>
+
+              <% if ((!submission.image_attempts || submission.image_attempts.length === 0) && 
+                     (!submission.text_attempts || submission.text_attempts.length === 0)) { %>
+                <div style="color: #95a5a6; text-align: center; padding: 20px;">
+                  No submission content available
+                </div>
+              <% } %>
+            </div>
+
+            <div class="review-actions">
+              <% if (submission.solved === 0) { %>
+                <button class="action-btn btn-correct" 
+                        onclick="markSubmission('<%= submission.team_id %>', '<%= submission.question_id %>', 'correct')">
+                  ✅ Mark Correct (+<%= submission.question_score %> Aura)
+                </button>
+                <button class="action-btn btn-incorrect" 
+                        onclick="markSubmission('<%= submission.team_id %>', '<%= submission.question_id %>', 'incorrect')">
+                  ❌ Mark Incorrect (<%= submission.question_deduction > 0 ? '-' + submission.question_deduction : 'No penalty' %>)
+                </button>
+              <% } else { %>
+                <span class="status-badge status-solved">✅ Already Solved</span>
+              <% } %>
+              
+              <% if (submission.checked === 0 && submission.solved === 0) { %>
+                <button class="action-btn btn-mark-checked" 
+                        onclick="markSubmission('<%= submission.team_id %>', '<%= submission.question_id %>', 'checked')">
+                  👁️ Mark as Reviewed
+                </button>
+              <% } %>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="no-submissions">
+          <h3>No submissions found</h3>
+          <p>Teams haven't submitted any answers yet, or submissions are still being loaded.</p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal">
+    <span class="close-modal" onclick="closeImageModal()">&times;</span>
+    <div class="modal-content">
+      <img id="modalImage" class="modal-image" src="" alt="Submission Image">
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="loadingSpinner" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Processing submission...</p>
+  </div>
+
+  <footer>
+    <div>
+      <p>STEM High School for Boys - 6th of October - Submission Review</p>
+    </div>
+  </footer>
+
+  <script>
+    const ADMIN_TOKEN = '<%= process.env.ADMIN_REQUEST_TOKEN %>';
+    let currentFilter = 'all';
+
+    // Initialize filters
+    function initializeFilters() {
+      const teams = new Set();
+      const questions = new Set();
+      
+      document.querySelectorAll('.submission-card').forEach(card => {
+        teams.add(card.dataset.team);
+        questions.add(card.dataset.question);
+      });
+
+      const teamFilter = document.getElementById('teamFilter');
+      const questionFilter = document.getElementById('questionFilter');
+
+      // Populate team filter
+      Array.from(teams).sort().forEach(team => {
+        const option = document.createElement('option');
+        option.value = team;
+        option.textContent = `Team ${team}`;
+        teamFilter.appendChild(option);
+      });
+
+      // Populate question filter
+      Array.from(questions).sort((a, b) => parseInt(a) - parseInt(b)).forEach(question => {
+        const option = document.createElement('option');
+        option.value = question;
+        option.textContent = `Question ${question}`;
+        questionFilter.appendChild(option);
+      });
+    }
+
+    function showMessage(message, type = 'success') {
+      const container = document.getElementById('message-container');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+      messageDiv.textContent = message;
+      container.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        container.removeChild(messageDiv);
+      }, 5000);
+    }
+
+    function showLoading() {
+      document.getElementById('loadingSpinner').style.display = 'block';
+    }
+
+    function hideLoading() {
+      document.getElementById('loadingSpinner').style.display = 'none';
+    }
+
+    async function markSubmission(teamId, questionId, action) {
+      if (!confirm(`Are you sure you want to mark this submission as ${action}?`)) {
+        return;
+      }
+
+      showLoading();
+      
+      try {
+        let endpoint, message;
+        
+        if (action === 'correct') {
+          endpoint = '/correctQuestion';
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              teamId: teamId,
+              gameId: parseInt(questionId),
+              correct: true
+            })
+          });
+          message = 'Submission marked as correct! Points awarded.';
+        } else if (action === 'incorrect') {
+          endpoint = '/correctQuestion';
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              teamId: teamId,
+              gameId: parseInt(questionId),
+              correct: false
+            })
+          });
+          message = 'Submission marked as incorrect. Points deducted.';
+        } else if (action === 'checked') {
+          endpoint = '/toggleChecked';
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: teamId,
+              questionId: parseInt(questionId),
+              token: ADMIN_TOKEN
+            })
+          });
+          message = 'Submission marked as reviewed.';
+        }
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage(message);
+          setTimeout(() => location.reload(), 2000);
+        } else {
+          showMessage(result.message || 'Failed to process submission', 'error');
+        }
+      } catch (error) {
+        showMessage('Network error: ' + error.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function filterSubmissions(status) {
+      currentFilter = status;
+      
+      // Update active tab
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const teamFilter = document.getElementById('teamFilter').value;
+      const questionFilter = document.getElementById('questionFilter').value;
+      
+      document.querySelectorAll('.submission-card').forEach(card => {
+        const matchesStatus = currentFilter === 'all' || card.dataset.status === currentFilter;
+        const matchesTeam = !teamFilter || card.dataset.team === teamFilter;
+        const matchesQuestion = !questionFilter || card.dataset.question === questionFilter;
+        
+        card.style.display = matchesStatus && matchesTeam && matchesQuestion ? 'block' : 'none';
+      });
+    }
+
+    function openImageModal(imageUrl) {
+      document.getElementById('modalImage').src = imageUrl;
+      document.getElementById('imageModal').style.display = 'block';
+    }
+
+    function closeImageModal() {
+      document.getElementById('imageModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside the image
+    document.getElementById('imageModal').onclick = function(event) {
+      if (event.target === this) {
+        closeImageModal();
+      }
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeFilters();
+    });
+
+    // Auto-refresh every 60 seconds
+    setInterval(() => {
+      console.log('Auto-refreshing submissions...');
+      location.reload();
+    }, 60000);
+  </script>
+</body>
+</html>

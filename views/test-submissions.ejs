@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Submissions - Aura Hunt</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      min-height: 100vh;
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+    }
+    
+    input::placeholder, textarea::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    button:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+    
+    .message {
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      font-weight: 600;
+    }
+    
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .separator {
+      text-align: center;
+      margin: 40px 0;
+      position: relative;
+    }
+    
+    .separator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .separator span {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test Submissions Portal</h1>
+  
+  <div class="container">
+    <h2>📸 Image Submission Test</h2>
+    <form id="imageForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="imageTeamId">Team ID:</label>
+        <input type="text" id="imageTeamId" name="teamid" placeholder="e.g., 01, 101, 201" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="imageTeamToken">Team Token:</label>
+        <input type="text" id="imageTeamToken" name="teamtoken" placeholder="Team's secure token" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="imageGameId">Question ID:</label>
+        <select id="imageGameId" name="gameId" required>
+          <option value="">Select Question</option>
+          <option value="1">1 - The Ancient Cats</option>
+          <option value="2">2 - The Hidden Oasis</option>
+          <option value="3">3 - F.I.R.E.S.T.O.R.M.</option>
+          <option value="4">4 - Is It a Full Moon</option>
+          <option value="5">5 - The Police Heart</option>
+          <option value="6">6 - Elixir of Aura</option>
+          <option value="7">7 - Are You Hungry Too</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="imageFile">Image File:</label>
+        <input type="file" id="imageFile" name="file" accept="image/*" required>
+      </div>
+      
+      <button type="submit">📤 Submit Image</button>
+    </form>
+  </div>
+
+  <div class="separator"><span>OR</span></div>
+
+  <div class="container">
+    <h2>📝 Text Submission Test</h2>
+    <form id="textForm">
+      <div class="form-group">
+        <label for="textTeamId">Team ID:</label>
+        <input type="text" id="textTeamId" name="teamid" placeholder="e.g., 01, 101, 201" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="textTeamToken">Team Token:</label>
+        <input type="text" id="textTeamToken" name="teamtoken" placeholder="Team's secure token" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="textGameId">Question ID:</label>
+        <select id="textGameId" name="gameId" required>
+          <option value="">Select Question</option>
+          <option value="1">1 - The Ancient Cats</option>
+          <option value="2">2 - The Hidden Oasis</option>
+          <option value="3">3 - F.I.R.E.S.T.O.R.M.</option>
+          <option value="4">4 - Is It a Full Moon</option>
+          <option value="5">5 - The Police Heart</option>
+          <option value="6">6 - Elixir of Aura</option>
+          <option value="7">7 - Are You Hungry Too</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="textContent">Text Submission:</label>
+        <textarea id="textContent" name="text" rows="4" placeholder="Enter your text answer here..." required></textarea>
+      </div>
+      
+      <button type="submit">📤 Submit Text</button>
+    </form>
+  </div>
+
+  <div id="messageContainer"></div>
+
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="/admin/submissions" style="color: #3498db; text-decoration: none; font-weight: 600;">
+      🔍 View Admin Submission Review
+    </a>
+  </div>
+
+  <script>
+    function showMessage(message, type) {
+      const container = document.getElementById('messageContainer');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = message;
+      container.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        container.removeChild(messageDiv);
+      }, 5000);
+    }
+
+    // Image submission
+    document.getElementById('imageForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      formData.append('gamename', document.getElementById('imageGameId').selectedOptions[0].text);
+      
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('✅ Image submitted successfully!', 'success');
+          e.target.reset();
+        } else {
+          showMessage(`❌ Error: ${result.message}`, 'error');
+        }
+      } catch (error) {
+        showMessage(`❌ Network error: ${error.message}`, 'error');
+      }
+    });
+
+    // Text submission
+    document.getElementById('textForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      
+      try {
+        const response = await fetch('/submitText', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          showMessage('✅ Text submitted successfully!', 'success');
+          e.target.reset();
+        } else {
+          showMessage(`❌ Error: ${result.message}`, 'error');
+        }
+      } catch (error) {
+        showMessage(`❌ Network error: ${error.message}`, 'error');
+      }
+    });
+  </script>
+</body>
+</html>

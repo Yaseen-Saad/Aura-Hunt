@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index.js"
+    }
+  ],
+  "env": {
+    "SUPABASE_URL": "@supabase-url",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-key",
+    "SUPABASE_ANON_KEY": "@supabase-anon-key",
+    "ADMIN_REQUEST_TOKEN": "@admin-token"
+  }
+}
